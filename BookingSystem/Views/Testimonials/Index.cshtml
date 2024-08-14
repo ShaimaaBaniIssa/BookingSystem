@@ -20,7 +20,7 @@
                 @Html.DisplayNameFor(model => model.Hotel)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AppUser)
+                @Html.DisplayNameFor(model => model.Customer)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Status)
@@ -29,31 +29,32 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Reviewtext)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Hotel.Hotelid)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AppUser.Id)
-            </td>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Reviewtext)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Hotel.Hotelid)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Customerid)
+                </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Status)
                 </td>
-            <td>
-                @if(item.Status.Equals(SD.Testimonial_Pending))
-                {
+                <td>
+                    @if (item.Status.Equals(SD.Testimonial_Pending))
+                    {
                         <a asp-action="ManageStatus" asp-route-id="@item.Testimonialid" asp-route-isApproved="@true">Approve</a>
                         <span>|</span>
                         <a asp-action="ManageStatus" asp-route-id="@item.Testimonialid" asp-route-isApproved="@false">Reject</a>
 
-                }
-                
-            </td>
-        </tr>
-}
+                    }
+
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

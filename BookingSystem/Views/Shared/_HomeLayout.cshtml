@@ -59,7 +59,17 @@
                                     </li>
                                     <li><a href="./blog.html">News</a></li>
                                     <li><a href="./contact.html">Contact</a></li>
-                                    <partial name="_LoginPartial" />
+                                    @if (ViewBag.UserName == null)
+                                    {
+                                        <li><a asp-controller="Account" asp-action="Register">Register</a></li>
+                                        <li><a asp-controller="Account" asp-action="Login">Login</a></li>
+                                    }
+                                    else
+                                    {
+                                        <li><a asp-controller="Account" asp-action="Logout">Logout</a></li>
+                                    }
+
+
 
                                 </ul>
                             </nav>

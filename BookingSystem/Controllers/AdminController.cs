@@ -8,21 +8,21 @@ using System.Security.Claims;
 
 namespace BookingSystem.Controllers
 {
-    [Authorize(Roles = SD.Role_Admin)]
+    
 
     public class AdminController : Controller
     {
 
         private readonly ModelContext _context;
-        private readonly UserManager<IdentityUser> _userManager;
-        public AdminController(ModelContext context, UserManager<IdentityUser> userManager)
+        
+        public AdminController(ModelContext context)
         {
             _context = context;
-            _userManager = userManager;
+            
         }
         public IActionResult Index()
         {
-            ViewBag.NumOfRegisteredUsers = _context.AppUsers.Count();
+            ViewBag.NumOfRegisteredUsers = _context.UserLogins.Count();
 
             List<HotelRooms> availableRooms = _context.Rooms.Where(u=>u.Availabilty==1).Include(r=>r.Hotel)
                 .GroupBy(u => u.Hotelid).Select(grp => new HotelRooms() { HotelName =grp.First().Hotel.Name , NumOfRooms = grp.Count()}).ToList();
@@ -35,33 +35,32 @@ namespace BookingSystem.Controllers
         }
         public IActionResult Profile()
         {
-            var userId= User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var user = _context.AppUsers.FirstOrDefault(u => u.Id == userId);
+            var userId = HttpContext.Session.GetInt32("Id");
+            var customerId = _context.UserLogins.FirstOrDefault(u => u.Id == userId).Customerid;
+            var customer = _context.Customers.SingleOrDefault(u => u.Customerid == customerId);
+            return View(customer);
 
-            return View(user);
         }
         public IActionResult EditProfile()
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var user = _context.AppUsers.FirstOrDefault(u => u.Id == userId);
+            var userId = HttpContext.Session.GetInt32("Id");
+            var customerId = _context.UserLogins.FirstOrDefault(u => u.Id == userId).Customerid;
+            var customer = _context.Customers.SingleOrDefault(u=>u.Customerid== customerId);
+            return View(customer);
 
-            return View(user);
+      
         }
         [HttpPost]
-        public async Task<IActionResult> EditProfile([Bind("Id,UserName,FirstName,LastName,Email,PhoneNumber")] AppUser appUser)
+        public async Task<IActionResult> EditProfile( [Bind("Customerid,Firstname,Lastname,Email,Phonenumber")] Customer customer)
         {
-            if (ModelState.IsValid)
-            {
+            
                 try
                 {
-                    var user = _context.AppUsers.FirstOrDefault(u => u.Id == appUser.Id);
-                    user.FirstName= appUser.FirstName;
-                    user.LastName= appUser.LastName;
-                    user.Email= appUser.Email;
-                    user.PhoneNumber= appUser.PhoneNumber;
-
-                    _context.Update(user);
+                 
+                    _context.Customers.Update(customer);
                     await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Profile));
+
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -69,9 +68,8 @@ namespace BookingSystem.Controllers
                         return NotFound();
                    
                 }
-                return RedirectToAction(nameof(Profile));
-            }
-            return View(appUser);
+            
+            
 
         }
     }

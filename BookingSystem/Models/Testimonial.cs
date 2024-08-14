@@ -12,10 +12,11 @@ public partial class Testimonial
 
     public decimal? Hotelid { get; set; }
 
+    public decimal? Customerid { get; set; }
+
+    public virtual Customer? Customer { get; set; }
+
     public virtual Hotel? Hotel { get; set; }
-    public string? AppUserId { get; set; }
-    [ForeignKey(nameof(AppUserId))]
-    public virtual AppUser? AppUser { get; set; }
 
     public string? Status { get; set; }
 }

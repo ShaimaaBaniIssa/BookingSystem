@@ -18,6 +18,13 @@ namespace BookingSystem.Controllers
         {
             _context = context;
         }
+
+        // GET: Testimonials
+        public async Task<IActionResult> Index()
+        {
+            var modelContext = _context.Testimonials.Include(t => t.Customer).Include(t => t.Hotel);
+            return View(await modelContext.ToListAsync());
+        }
         public async Task<IActionResult> ManageStatus(decimal? id, bool isApproved)
         {
             var testimonial = await _context.Testimonials
@@ -34,18 +41,10 @@ namespace BookingSystem.Controllers
             }
             _context.Update(testimonial);
             await _context.SaveChangesAsync();
-            var modelContext = _context.Testimonials.Include(t => t.AppUser).Include(t => t.Hotel);
+            var modelContext = _context.Testimonials.Include(t => t.Customer).Include(t => t.Hotel);
             return RedirectToAction(nameof(Index));
 
         }
-
-        // GET: Testimonials
-        public async Task<IActionResult> Index()
-        {
-            var modelContext = _context.Testimonials.Include(t => t.AppUser).Include(t => t.Hotel);
-            return View(await modelContext.ToListAsync());
-        }
-
         // GET: Testimonials/Details/5
         public async Task<IActionResult> Details(decimal? id)
         {
@@ -55,8 +54,8 @@ namespace BookingSystem.Controllers
             }
 
             var testimonial = await _context.Testimonials
-                //.Include(t => t.AppUser)
-                //.Include(t => t.Hotel)
+                .Include(t => t.Customer)
+                .Include(t => t.Hotel)
                 .FirstOrDefaultAsync(m => m.Testimonialid == id);
             if (testimonial == null)
             {
@@ -69,7 +68,7 @@ namespace BookingSystem.Controllers
         // GET: Testimonials/Create
         public IActionResult Create()
         {
-            ViewData["AppUserId"] = new SelectList(_context.AppUsers, "Id", "Id");
+            ViewData["CustomerId"] = new SelectList(_context.Customers, "Customerid", "Customerid");
             ViewData["Hotelid"] = new SelectList(_context.Hotels, "Hotelid", "Hotelid");
             return View();
         }
@@ -79,16 +78,16 @@ namespace BookingSystem.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Testimonialid,Reviewtext,Hotelid,AppUserId")] Testimonial testimonial)
+        public async Task<IActionResult> Create([Bind("Testimonialid,Reviewtext,Hotelid,Customerid")] Testimonial testimonial)
         {
             if (ModelState.IsValid)
             {
-                testimonial.Status = SD.Testimonial_Pending;
+                testimonial.Status=SD.Testimonial_Pending;
                 _context.Add(testimonial);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AppUserId"] = new SelectList(_context.AppUsers, "Id", "Id", testimonial.AppUserId);
+            ViewData["CustomerId"] = new SelectList(_context.Customers, "Customerid", "Customerid", testimonial.Customerid);
             ViewData["Hotelid"] = new SelectList(_context.Hotels, "Hotelid", "Hotelid", testimonial.Hotelid);
             return View(testimonial);
         }
@@ -106,7 +105,7 @@ namespace BookingSystem.Controllers
             {
                 return NotFound();
             }
-            ViewData["AppUserId"] = new SelectList(_context.AppUsers, "Id", "Id", testimonial.AppUserId);
+            ViewData["CustomerId"] = new SelectList(_context.Customers, "Customerid", "Customerid", testimonial.Customerid);
             ViewData["Hotelid"] = new SelectList(_context.Hotels, "Hotelid", "Hotelid", testimonial.Hotelid);
             return View(testimonial);
         }
@@ -116,7 +115,7 @@ namespace BookingSystem.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(decimal id, [Bind("Testimonialid,Reviewtext,Hotelid,AppUserId")] Testimonial testimonial)
+        public async Task<IActionResult> Edit(decimal id, [Bind("Testimonialid,Reviewtext,Hotelid,Customerid,Status")] Testimonial testimonial)
         {
             if (id != testimonial.Testimonialid)
             {
@@ -143,7 +142,7 @@ namespace BookingSystem.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AppUserId"] = new SelectList(_context.AppUsers, "Id", "Id", testimonial.AppUserId);
+            ViewData["CustomerId"] = new SelectList(_context.Customers, "Customerid", "Customerid", testimonial.Customerid);
             ViewData["Hotelid"] = new SelectList(_context.Hotels, "Hotelid", "Hotelid", testimonial.Hotelid);
             return View(testimonial);
         }
@@ -157,7 +156,7 @@ namespace BookingSystem.Controllers
             }
 
             var testimonial = await _context.Testimonials
-                .Include(t => t.AppUser)
+                .Include(t => t.Customer)
                 .Include(t => t.Hotel)
                 .FirstOrDefaultAsync(m => m.Testimonialid == id);
             if (testimonial == null)

@@ -1,8 +1,8 @@
 using BookingSystem.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
+
 using BookingSystem.Utility;
+using BookingSystem.Services;
 
 namespace BookingSystem
 {
@@ -18,11 +18,12 @@ namespace BookingSystem
             {
                 options.UseOracle(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+            builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 
-            builder.Services.AddIdentity<IdentityUser,IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
-    .AddEntityFrameworkStores<ModelContext>().AddDefaultTokenProviders();
-            builder.Services.AddRazorPages();
-            builder.Services.AddScoped<IEmailSender, EmailSender>();
+
+            builder.Services.AddSession(options => {
+                options.IdleTimeout = TimeSpan.FromMinutes(60);
+            });
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -39,7 +40,8 @@ namespace BookingSystem
             app.UseRouting();
             app.UseAuthentication(); ;
             app.UseAuthorization();
-            app.MapRazorPages();
+            app.UseSession();
+
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");

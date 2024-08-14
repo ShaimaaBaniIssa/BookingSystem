@@ -3,6 +3,7 @@ using System;
 using BookingSystem.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Oracle.EntityFrameworkCore.Metadata;
 
@@ -11,9 +12,11 @@ using Oracle.EntityFrameworkCore.Metadata;
 namespace BookingSystem.Migrations
 {
     [DbContext(typeof(ModelContext))]
-    partial class ModelContextModelSnapshot : ModelSnapshot
+    [Migration("20240814101019_editDataBase")]
+    partial class editDataBase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -126,10 +129,7 @@ namespace BookingSystem.Migrations
             modelBuilder.Entity("BookingSystem.Models.Customer", b =>
                 {
                     b.Property<decimal>("CustomerId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("DECIMAL(18, 2)");
-
-                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("CustomerId"));
 
                     b.Property<string>("Email")
                         .HasColumnType("NVARCHAR2(2000)");
@@ -272,10 +272,7 @@ namespace BookingSystem.Migrations
             modelBuilder.Entity("BookingSystem.Models.Role", b =>
                 {
                     b.Property<decimal>("RoleId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("DECIMAL(18, 2)");
-
-                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("RoleId"));
 
                     b.Property<string>("RoleName")
                         .HasColumnType("NVARCHAR2(2000)");
@@ -383,10 +380,7 @@ namespace BookingSystem.Migrations
             modelBuilder.Entity("BookingSystem.Models.UserLogin", b =>
                 {
                     b.Property<decimal>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("DECIMAL(18, 2)");
-
-                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
 
                     b.Property<decimal?>("CustomerId")
                         .HasColumnType("DECIMAL(18, 2)");

@@ -16,11 +16,8 @@ namespace BookingSystem.Controllers
 
         public IActionResult Index()
         {
-            if (User.IsInRole(SD.Role_Admin))
-            {
-                return View();
-
-            }
+            string? userName = HttpContext.Session.GetString("Name");
+            ViewBag.UserName = userName;
             return View();
         }
 

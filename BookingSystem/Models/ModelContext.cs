@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookingSystem.Models;
 
-public partial class ModelContext : IdentityDbContext
+public partial class ModelContext :DbContext
 {
     public ModelContext()
     {
@@ -27,7 +26,11 @@ public partial class ModelContext : IdentityDbContext
     public virtual DbSet<Room> Rooms { get; set; }
 
     public virtual DbSet<Testimonial> Testimonials { get; set; }
-    public virtual DbSet<AppUser> AppUsers { get; set; }
+    public virtual DbSet<UserLogin> UserLogins { get; set; }
+    public virtual DbSet<Customer> Customers { get; set; }
+    public virtual DbSet<Role> Roles { get; set; }
+
+
 
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -36,50 +39,13 @@ public partial class ModelContext : IdentityDbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        base.OnModelCreating(modelBuilder);
         modelBuilder
-            .HasDefaultSchema("C##SHAIMAA2")
-            .UseCollation("USING_NLS_COMP");
-
-        modelBuilder.Entity<Aboutusdatum>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("SYS_C008631");
-
-            entity.ToTable("ABOUTUSDATA");
-
-            entity.Property(e => e.Id)
-                .ValueGeneratedOnAdd()
-                .HasColumnType("NUMBER(38)")
-                .HasColumnName("ID");
-            entity.Property(e => e.Description)
-                .HasMaxLength(100)
-                .IsUnicode(false)
-                .HasColumnName("DESCRIPTION");
-            entity.Property(e => e.Imgpath1)
-                .HasMaxLength(100)
-                .IsUnicode(false)
-                .HasColumnName("IMGPATH1");
-            entity.Property(e => e.Imgpath2)
-                .HasMaxLength(100)
-                .IsUnicode(false)
-                .HasColumnName("IMGPATH2");
-            entity.Property(e => e.Imgpath3)
-                .HasMaxLength(100)
-                .IsUnicode(false)
-                .HasColumnName("IMGPATH3");
-            entity.Property(e => e.Imgpath4)
-                .HasMaxLength(100)
-                .IsUnicode(false)
-                .HasColumnName("IMGPATH4");
-            entity.Property(e => e.Title)
-                .HasMaxLength(25)
-                .IsUnicode(false)
-                .HasColumnName("TITLE");
-        });
+     .HasDefaultSchema("C##SHAIMAA2")
+     .UseCollation("USING_NLS_COMP");
 
         modelBuilder.Entity<Booking>(entity =>
         {
-            entity.HasKey(e => e.Bookingid).HasName("SYS_C008623");
+            entity.HasKey(e => e.Bookingid).HasName("SYS_C008699");
 
             entity.ToTable("BOOKING");
 
@@ -93,6 +59,9 @@ public partial class ModelContext : IdentityDbContext
             entity.Property(e => e.Checkout)
                 .HasColumnType("DATE")
                 .HasColumnName("CHECKOUT");
+            entity.Property(e => e.Customerid)
+                .HasColumnType("NUMBER(38)")
+                .HasColumnName("CUSTOMERID");
             entity.Property(e => e.Numberofpersons)
                 .HasColumnType("NUMBER(38)")
                 .HasColumnName("NUMBEROFPERSONS");
@@ -107,46 +76,43 @@ public partial class ModelContext : IdentityDbContext
                 .HasColumnType("NUMBER")
                 .HasColumnName("TOTALPRICE");
 
+            entity.HasOne(d => d.Customer).WithMany(p => p.Bookings)
+                .HasForeignKey(d => d.Customerid)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("SYS_C008701");
+
             entity.HasOne(d => d.Room).WithMany(p => p.Bookings)
                 .HasForeignKey(d => d.Roomid)
                 .OnDelete(DeleteBehavior.SetNull)
-                .HasConstraintName("SYS_C008624");
+                .HasConstraintName("SYS_C008700");
         });
 
-        modelBuilder.Entity<Homedatum>(entity =>
+        modelBuilder.Entity<Customer>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("SYS_C008629");
+            entity.HasKey(e => e.Customerid).HasName("SYS_C008686");
 
-            entity.ToTable("HOMEDATA");
+            entity.ToTable("CUSTOMERS");
 
-            entity.Property(e => e.Id)
+            entity.Property(e => e.Customerid)
                 .ValueGeneratedOnAdd()
                 .HasColumnType("NUMBER(38)")
-                .HasColumnName("ID");
-            entity.Property(e => e.Description)
-                .HasMaxLength(100)
+                .HasColumnName("CUSTOMERID");
+            entity.Property(e => e.Email)
+                .HasMaxLength(35)
                 .IsUnicode(false)
-                .HasColumnName("DESCRIPTION");
-            entity.Property(e => e.Imgpath1)
-                .HasMaxLength(100)
+                .HasColumnName("EMAIL");
+            entity.Property(e => e.Firstname)
+                .HasMaxLength(35)
                 .IsUnicode(false)
-                .HasColumnName("IMGPATH1");
-            entity.Property(e => e.Imgpath2)
-                .HasMaxLength(100)
+                .HasColumnName("FIRSTNAME");
+            entity.Property(e => e.Lastname)
+                .HasMaxLength(35)
                 .IsUnicode(false)
-                .HasColumnName("IMGPATH2");
-            entity.Property(e => e.Imgpath3)
-                .HasMaxLength(100)
+                .HasColumnName("LASTNAME");
+            entity.Property(e => e.Phonenumber)
+                .HasMaxLength(15)
                 .IsUnicode(false)
-                .HasColumnName("IMGPATH3");
-            entity.Property(e => e.Logopath)
-                .HasMaxLength(100)
-                .IsUnicode(false)
-                .HasColumnName("LOGOPATH");
-            entity.Property(e => e.Title)
-                .HasMaxLength(25)
-                .IsUnicode(false)
-                .HasColumnName("TITLE");
+                .HasColumnName("PHONENUMBER");
         });
 
         modelBuilder.Entity<Hotel>(entity =>
@@ -193,11 +159,29 @@ public partial class ModelContext : IdentityDbContext
                 .HasColumnName("PHONENUMBER");
         });
 
+        modelBuilder.Entity<Role>(entity =>
+        {
+            entity.HasKey(e => e.Roleid).HasName("SYS_C008689");
+
+            entity.ToTable("ROLES");
+
+            entity.Property(e => e.Roleid)
+                .ValueGeneratedOnAdd()
+                .HasColumnType("NUMBER(38)")
+                .HasColumnName("ROLEID");
+            entity.Property(e => e.Rolename)
+                .HasMaxLength(35)
+                .IsUnicode(false)
+                .HasColumnName("ROLENAME");
+        });
+
         modelBuilder.Entity<Room>(entity =>
         {
             entity.HasKey(e => e.Roomid).HasName("SYS_C008620");
 
             entity.ToTable("ROOM");
+
+            entity.HasIndex(e => e.Hotelid, "IX_ROOM_HOTELID");
 
             entity.Property(e => e.Roomid)
                 .ValueGeneratedOnAdd()
@@ -240,7 +224,7 @@ public partial class ModelContext : IdentityDbContext
 
         modelBuilder.Entity<Testimonial>(entity =>
         {
-            entity.HasKey(e => e.Testimonialid).HasName("SYS_C008626");
+            entity.HasKey(e => e.Testimonialid).HasName("SYS_C008703");
 
             entity.ToTable("TESTIMONIAL");
 
@@ -248,6 +232,9 @@ public partial class ModelContext : IdentityDbContext
                 .ValueGeneratedOnAdd()
                 .HasColumnType("NUMBER(38)")
                 .HasColumnName("TESTIMONIALID");
+            entity.Property(e => e.Customerid)
+                .HasColumnType("NUMBER(38)")
+                .HasColumnName("CUSTOMERID");
             entity.Property(e => e.Hotelid)
                 .HasColumnType("NUMBER(38)")
                 .HasColumnName("HOTELID");
@@ -255,12 +242,59 @@ public partial class ModelContext : IdentityDbContext
                 .HasMaxLength(20)
                 .IsUnicode(false)
                 .HasColumnName("REVIEWTEXT");
+            entity.Property(e => e.Status)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("STATUS");
+
+            entity.HasOne(d => d.Customer).WithMany(p => p.Testimonials)
+                .HasForeignKey(d => d.Customerid)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("SYS_C008705");
 
             entity.HasOne(d => d.Hotel).WithMany(p => p.Testimonials)
                 .HasForeignKey(d => d.Hotelid)
                 .OnDelete(DeleteBehavior.SetNull)
-                .HasConstraintName("SYS_C008627");
+                .HasConstraintName("SYS_C008704");
         });
+
+        modelBuilder.Entity<UserLogin>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("SYS_C008695");
+
+            entity.ToTable("USERLOGINS");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedOnAdd()
+                .HasColumnType("NUMBER(38)")
+                .HasColumnName("ID");
+            entity.Property(e => e.Customerid)
+                .HasColumnType("NUMBER")
+                .HasColumnName("CUSTOMERID");
+            entity.Property(e => e.Hashedpassword).HasColumnName("HASHEDPASSWORD");
+            entity.Property(e => e.Roleid)
+                .HasColumnType("NUMBER")
+                .HasColumnName("ROLEID");
+            entity.Property(e => e.Username)
+                .HasMaxLength(35)
+                .IsUnicode(false)
+                .HasColumnName("USERNAME");
+
+            entity.HasOne(d => d.Customer).WithMany(p => p.Userlogins)
+                .HasForeignKey(d => d.Customerid)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("SYS_C008697");
+
+            entity.HasOne(d => d.Role).WithMany(p => p.UserLogins)
+                .HasForeignKey(d => d.Roleid)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("SYS_C008696");
+        });
+        modelBuilder.HasSequence("S_ROLL_SEQ");
+        modelBuilder.HasSequence("S_ROLL_SEQ2");
+        modelBuilder.HasSequence("S_ROLL_SEQ3");
+        modelBuilder.HasSequence("SEQ_TMP_IDENTITY_ID");
+
 
         OnModelCreatingPartial(modelBuilder);
     }
