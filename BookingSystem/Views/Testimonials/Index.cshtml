@@ -1,0 +1,59 @@
+﻿@model IEnumerable<BookingSystem.Models.Testimonial>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Reviewtext)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Hotel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AppUser)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Reviewtext)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Hotel.Hotelid)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AppUser.Id)
+            </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+            <td>
+                @if(item.Status.Equals(SD.Testimonial_Pending))
+                {
+                        <a asp-action="ManageStatus" asp-route-id="@item.Testimonialid" asp-route-isApproved="@true">Approve</a>
+                        <span>|</span>
+                        <a asp-action="ManageStatus" asp-route-id="@item.Testimonialid" asp-route-isApproved="@false">Reject</a>
+
+                }
+                
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

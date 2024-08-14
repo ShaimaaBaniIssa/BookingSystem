@@ -1,0 +1,77 @@
+﻿@model IEnumerable<BookingSystem.Models.Room>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create" asp-route-hotelId="@ViewBag.HotelId">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Roomtype)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Maxcapacity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Availabilty)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Imagepath)
+            </th>
+            
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Roomtype)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Maxcapacity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Availabilty)
+            </td>
+            <td>
+                    <img src=@Url.Content("~/Images/Room/" + item.Imagepath) asp-append-version="true" style="border-radius:20%;" width="100" height="100" />
+                </td>
+           
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Roomid">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Roomid">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Roomid">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+<div>
+    <a asp-action="Index" asp-controller="Hotels">Back to List</a>
+</div>

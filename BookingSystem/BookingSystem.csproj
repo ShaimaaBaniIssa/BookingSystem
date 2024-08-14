@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.32" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.32" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.5" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.32" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.5" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.5">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.17" />
+		<PackageReference Include="ODP.NetCore" Version="2.0.12" />
+		<PackageReference Include="Oracle.EntityFrameworkCore" Version="7.21.9" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="wwwroot\HomeAssest\css\.DS_Store" />
+	  <None Include="wwwroot\HomeAssest\css\bootstrap\.DS_Store" />
+	  <None Include="wwwroot\HomeAssest\css\css\.DS_Store" />
+	  <None Include="wwwroot\HomeAssest\fonts\.DS_Store" />
+	  <None Include="wwwroot\HomeAssest\fonts\flaticon\.DS_Store" />
+	  <None Include="wwwroot\HomeAssest\fonts\ionicons\fonts\.DS_Store" />
+	  <None Include="wwwroot\HomeAssest\images\.DS_Store" />
+	  <None Include="wwwroot\HomeAssest\js\.DS_Store" />
+	  <None Include="wwwroot\HomeAssest\scss\.DS_Store" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="wwwroot\Images\Hotel\" />
+	  <Folder Include="wwwroot\Images\Room\" />
+	</ItemGroup>
+
+</Project>
