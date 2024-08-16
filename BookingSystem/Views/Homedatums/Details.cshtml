@@ -1,0 +1,55 @@
+﻿@model BookingSystem.Models.Homedatum
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Homedatum</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Logopath)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Logopath)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Imgpath1)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Imgpath1)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Imgpath2)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Imgpath2)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Imgpath3)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Imgpath3)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

@@ -1,0 +1,59 @@
+﻿@model BookingSystem.Models.Booking
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1>Create</h1>
+
+<h4>Booking</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Checkin" class="control-label"></label>
+                <input asp-for="Checkin" class="form-control" />
+                <span asp-validation-for="Checkin" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Checkout" class="control-label"></label>
+                <input asp-for="Checkout" class="form-control" />
+                <span asp-validation-for="Checkout" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Totalprice" class="control-label"></label>
+                <input asp-for="Totalprice" class="form-control" />
+                <span asp-validation-for="Totalprice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Numberofpersons" class="control-label"></label>
+                <input asp-for="Numberofpersons" class="form-control" />
+                <span asp-validation-for="Numberofpersons" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Status" class="control-label"></label>
+                <input asp-for="Status" class="form-control" />
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Roomid" class="control-label"></label>
+                <select asp-for="Roomid" class ="form-control" asp-items="ViewBag.Roomid"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Customerid" class="control-label"></label>
+                <select asp-for="Customerid" class ="form-control" asp-items="ViewBag.Customerid"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

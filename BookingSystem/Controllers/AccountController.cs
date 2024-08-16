@@ -68,7 +68,7 @@ namespace BookingSystem.Controllers
                         {
                             //set session
                             HttpContext.Session.SetString("Name", user.Customer.Firstname);
-                        HttpContext.Session.SetInt32("Id", (int)user.Id);
+                        HttpContext.Session.SetInt32("Id", (int)user.Customerid);
 
                         HttpContext.Session.SetInt32("RoleId", (int)user.Roleid);
                             return RedirectToAction("Index", "Home");

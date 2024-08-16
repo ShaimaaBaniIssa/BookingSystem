@@ -22,7 +22,7 @@ namespace BookingSystem.Controllers
         // GET: Testimonials
         public async Task<IActionResult> Index()
         {
-            var modelContext = _context.Testimonials.Include(t => t.Customer).Include(t => t.Hotel);
+            var modelContext = _context.Testimonials.Include(t => t.Customer).Include(t => t.Room);
             return View(await modelContext.ToListAsync());
         }
         public async Task<IActionResult> ManageStatus(decimal? id, bool isApproved)
@@ -41,7 +41,7 @@ namespace BookingSystem.Controllers
             }
             _context.Update(testimonial);
             await _context.SaveChangesAsync();
-            var modelContext = _context.Testimonials.Include(t => t.Customer).Include(t => t.Hotel);
+            var modelContext = _context.Testimonials.Include(t => t.Customer).Include(t => t.Room);
             return RedirectToAction(nameof(Index));
 
         }
@@ -55,7 +55,7 @@ namespace BookingSystem.Controllers
 
             var testimonial = await _context.Testimonials
                 .Include(t => t.Customer)
-                .Include(t => t.Hotel)
+                .Include(t => t.Room)
                 .FirstOrDefaultAsync(m => m.Testimonialid == id);
             if (testimonial == null)
             {
@@ -69,7 +69,7 @@ namespace BookingSystem.Controllers
         public IActionResult Create()
         {
             ViewData["CustomerId"] = new SelectList(_context.Customers, "Customerid", "Customerid");
-            ViewData["Hotelid"] = new SelectList(_context.Hotels, "Hotelid", "Hotelid");
+            ViewData["Roomid"] = new SelectList(_context.Rooms, "Roomid", "Roomid");
             return View();
         }
 
@@ -88,7 +88,7 @@ namespace BookingSystem.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CustomerId"] = new SelectList(_context.Customers, "Customerid", "Customerid", testimonial.Customerid);
-            ViewData["Hotelid"] = new SelectList(_context.Hotels, "Hotelid", "Hotelid", testimonial.Hotelid);
+            ViewData["Roomid"] = new SelectList(_context.Rooms, "Roomid", "Roomid", testimonial.Roomid);
             return View(testimonial);
         }
 
@@ -106,7 +106,7 @@ namespace BookingSystem.Controllers
                 return NotFound();
             }
             ViewData["CustomerId"] = new SelectList(_context.Customers, "Customerid", "Customerid", testimonial.Customerid);
-            ViewData["Hotelid"] = new SelectList(_context.Hotels, "Hotelid", "Hotelid", testimonial.Hotelid);
+            ViewData["Roomid"] = new SelectList(_context.Rooms, "Roomid", "Roomid", testimonial.Roomid);
             return View(testimonial);
         }
 
@@ -143,7 +143,7 @@ namespace BookingSystem.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CustomerId"] = new SelectList(_context.Customers, "Customerid", "Customerid", testimonial.Customerid);
-            ViewData["Hotelid"] = new SelectList(_context.Hotels, "Hotelid", "Hotelid", testimonial.Hotelid);
+            ViewData["Roomid"] = new SelectList(_context.Rooms, "Roomid", "Roomid", testimonial.Roomid);
             return View(testimonial);
         }
 
@@ -157,7 +157,7 @@ namespace BookingSystem.Controllers
 
             var testimonial = await _context.Testimonials
                 .Include(t => t.Customer)
-                .Include(t => t.Hotel)
+                .Include(t => t.Room)
                 .FirstOrDefaultAsync(m => m.Testimonialid == id);
             if (testimonial == null)
             {

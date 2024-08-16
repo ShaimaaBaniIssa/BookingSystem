@@ -30,6 +30,7 @@ public partial class ModelContext :DbContext
     public virtual DbSet<Customer> Customers { get; set; }
     public virtual DbSet<Role> Roles { get; set; }
 
+    public virtual DbSet<Contactusdatum> Contactusdata { get; set; }
 
 
 
@@ -235,9 +236,9 @@ public partial class ModelContext :DbContext
             entity.Property(e => e.Customerid)
                 .HasColumnType("NUMBER(38)")
                 .HasColumnName("CUSTOMERID");
-            entity.Property(e => e.Hotelid)
+            entity.Property(e => e.Roomid)
                 .HasColumnType("NUMBER(38)")
-                .HasColumnName("HOTELID");
+                .HasColumnName("ROOMID");
             entity.Property(e => e.Reviewtext)
                 .HasMaxLength(20)
                 .IsUnicode(false)
@@ -246,14 +247,17 @@ public partial class ModelContext :DbContext
                 .HasMaxLength(20)
                 .IsUnicode(false)
                 .HasColumnName("STATUS");
+            entity.Property(e => e.TDate)
+               .HasColumnType("DATE")
+               .HasColumnName("TDATE");
 
             entity.HasOne(d => d.Customer).WithMany(p => p.Testimonials)
                 .HasForeignKey(d => d.Customerid)
                 .OnDelete(DeleteBehavior.SetNull)
                 .HasConstraintName("SYS_C008705");
 
-            entity.HasOne(d => d.Hotel).WithMany(p => p.Testimonials)
-                .HasForeignKey(d => d.Hotelid)
+            entity.HasOne(d => d.Room).WithMany(p => p.Testimonials)
+                .HasForeignKey(d => d.Roomid)
                 .OnDelete(DeleteBehavior.SetNull)
                 .HasConstraintName("SYS_C008704");
         });
@@ -289,6 +293,109 @@ public partial class ModelContext :DbContext
                 .HasForeignKey(d => d.Roleid)
                 .OnDelete(DeleteBehavior.SetNull)
                 .HasConstraintName("SYS_C008696");
+        });
+        modelBuilder.Entity<Aboutusdatum>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("SYS_C008631");
+
+            entity.ToTable("ABOUTUSDATA");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedOnAdd()
+                .HasColumnType("NUMBER(38)")
+                .HasColumnName("ID");
+            entity.Property(e => e.Description)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("DESCRIPTION");
+            entity.Property(e => e.Imgpath1)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("IMGPATH1");
+            entity.Property(e => e.Imgpath2)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("IMGPATH2");
+            entity.Property(e => e.Imgpath3)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("IMGPATH3");
+            entity.Property(e => e.Imgpath4)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("IMGPATH4");
+            entity.Property(e => e.Title)
+                .HasMaxLength(25)
+                .IsUnicode(false)
+                .HasColumnName("TITLE");
+        });
+
+        modelBuilder.Entity<Contactusdatum>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("SYS_C008707");
+
+            entity.ToTable("CONTACTUSDATA");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedOnAdd()
+                .HasColumnType("NUMBER(38)")
+                .HasColumnName("ID");
+            entity.Property(e => e.Address)
+                .HasMaxLength(35)
+                .IsUnicode(false)
+                .HasColumnName("ADDRESS");
+            entity.Property(e => e.Description)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("DESCRIPTION");
+            entity.Property(e => e.Email)
+                .HasMaxLength(35)
+                .IsUnicode(false)
+                .HasColumnName("EMAIL");
+            entity.Property(e => e.Locationurl)
+                .HasMaxLength(400)
+                .IsUnicode(false)
+                .HasColumnName("LOCATIONURL");
+            entity.Property(e => e.Phonenumber)
+                .HasMaxLength(15)
+                .IsUnicode(false)
+                .HasColumnName("PHONENUMBER");
+        });
+
+        modelBuilder.Entity<Homedatum>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("SYS_C008629");
+
+            entity.ToTable("HOMEDATA");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedOnAdd()
+                .HasColumnType("NUMBER(38)")
+                .HasColumnName("ID");
+            entity.Property(e => e.Description)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("DESCRIPTION");
+            entity.Property(e => e.Imgpath1)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("IMGPATH1");
+            entity.Property(e => e.Imgpath2)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("IMGPATH2");
+            entity.Property(e => e.Imgpath3)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("IMGPATH3");
+            entity.Property(e => e.Logopath)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("LOGOPATH");
+            entity.Property(e => e.Title)
+                .HasMaxLength(25)
+                .IsUnicode(false)
+                .HasColumnName("TITLE");
         });
         modelBuilder.HasSequence("S_ROLL_SEQ");
         modelBuilder.HasSequence("S_ROLL_SEQ2");

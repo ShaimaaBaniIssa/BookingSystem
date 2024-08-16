@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BookingSystem.Models;
 using Microsoft.Extensions.Hosting;
+using BookingSystem.Utility;
 
 namespace BookingSystem.Controllers
 {
@@ -52,6 +53,14 @@ namespace BookingSystem.Controllers
         public IActionResult Create(decimal hotelId)
         {
             ViewBag.hotelId = hotelId;
+            ViewData["RoomsType"] = new SelectList(new List<string>
+            { SD.RoomType_Deluxe,
+            SD.RoomType_Premium,
+            SD.RoomType_Luxury,
+            SD.RoomType_Double,
+            SD.RoomType_Family,
+            SD.RoomType_Single}
+            );
             return View(new Room() { Hotelid=hotelId});
         }
 

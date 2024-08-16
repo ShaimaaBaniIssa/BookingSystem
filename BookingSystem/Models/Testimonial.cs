@@ -10,13 +10,13 @@ public partial class Testimonial
 
     public string? Reviewtext { get; set; }
 
-    public decimal? Hotelid { get; set; }
-
     public decimal? Customerid { get; set; }
+    public decimal? Roomid { get; set; }
+    public DateTime? TDate { get; set; }
 
     public virtual Customer? Customer { get; set; }
+    public virtual Room? Room { get; set; }
 
-    public virtual Hotel? Hotel { get; set; }
 
     public string? Status { get; set; }
 }

@@ -1,0 +1,54 @@
+﻿@model IEnumerable<BookingSystem.Models.UserLogin>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1>Registered Users</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Username)
+            </th>
+            
+            <th>
+                @Html.DisplayNameFor(model => model.Customer.Firstname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Customer.Lastname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Customer.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Customer.Phonenumber)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Username)
+            </td>
+          
+            <td>
+                @Html.DisplayFor(modelItem => item.Customer.Firstname)
+            </td>
+            <td>
+                    @Html.DisplayFor(modelItem => item.Customer.Lastname)
+            </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Customer.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Customer.Phonenumber)
+                </td>
+       
+        </tr>
+}
+    </tbody>
+</table>
