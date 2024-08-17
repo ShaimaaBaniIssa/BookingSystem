@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using WebApplication1.Models;
 
 namespace BookingSystem.Models;
 
@@ -31,6 +32,7 @@ public partial class ModelContext :DbContext
     public virtual DbSet<Role> Roles { get; set; }
 
     public virtual DbSet<Contactusdatum> Contactusdata { get; set; }
+    public virtual DbSet<Bankcard> Bankcards { get; set; }
 
 
 
@@ -396,6 +398,39 @@ public partial class ModelContext :DbContext
                 .HasMaxLength(25)
                 .IsUnicode(false)
                 .HasColumnName("TITLE");
+        });
+        modelBuilder.Entity<Bankcard>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("SYS_C008714");
+
+            entity.ToTable("BANKCARDS");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedOnAdd()
+                .HasColumnType("NUMBER(38)")
+                .HasColumnName("ID");
+            entity.Property(e => e.Balance)
+                .HasColumnType("NUMBER")
+                .HasColumnName("BALANCE");
+            entity.Property(e => e.Cardholdername)
+                .HasMaxLength(35)
+                .IsUnicode(false)
+                .HasColumnName("CARDHOLDERNAME");
+            entity.Property(e => e.Cardnumber)
+                .HasMaxLength(16)
+                .IsUnicode(false)
+                .HasColumnName("CARDNUMBER");
+            entity.Property(e => e.Cvv)
+                .HasMaxLength(3)
+                .IsUnicode(false)
+                .HasColumnName("CVV");
+            entity.Property(e => e.Expirydate)
+                .HasColumnType("DATE")
+                .HasColumnName("EXPIRYDATE");
+            entity.Property(e => e.CardType)
+               .HasMaxLength(35)
+               .IsUnicode(false)
+               .HasColumnName("CARDTYPE");
         });
         modelBuilder.HasSequence("S_ROLL_SEQ");
         modelBuilder.HasSequence("S_ROLL_SEQ2");
