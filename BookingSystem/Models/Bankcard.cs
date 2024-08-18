@@ -7,6 +7,7 @@ public partial class Bankcard
 {
     public decimal Id { get; set; }
 
+    // note 16
     public string Cardnumber { get; set; } = null!;
 
     public string Cvv { get; set; } = null!;

@@ -121,7 +121,7 @@ namespace BookingSystem.Controllers
             _context.SaveChanges();
 
             // note return back to books page
-            return RedirectToAction("Index", "Payment",
+            return RedirectToAction("Pay", "Payment",
                 new {
                 bookingId=booking.Bookingid
             });
