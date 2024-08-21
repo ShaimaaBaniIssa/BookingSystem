@@ -22,6 +22,11 @@ namespace BookingSystem.Controllers
         }
         public IActionResult Index()
         {
+            string? userName = HttpContext.Session.GetString("Name");
+            int? roleId = HttpContext.Session.GetInt32("RoleId");
+            ViewBag.UserName = userName;
+            ViewBag.RoleId = roleId;
+
             ViewBag.NumOfRegisteredUsers = _context.UserLogins.Count();
 
             List<HotelRooms> availableRooms = _context.Rooms.Where(u=>u.Availabilty==1).Include(r=>r.Hotel)

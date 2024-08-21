@@ -53,15 +53,15 @@ namespace BookingSystem.Controllers
         public IActionResult Create(decimal hotelId)
         {
             ViewBag.hotelId = hotelId;
-            ViewData["RoomsType"] = new SelectList(new List<string>
-            { SD.RoomType_Deluxe,
-            SD.RoomType_Premium,
-            SD.RoomType_Luxury,
-            SD.RoomType_Double,
-            SD.RoomType_Family,
-            SD.RoomType_Single}
-            );
-            return View(new Room() { Hotelid=hotelId});
+            //ViewData["RoomsType"] = new SelectList(new List<string>
+            //{ SD.RoomType_Deluxe,
+            //SD.RoomType_Premium,
+            //SD.RoomType_Luxury,
+            //SD.RoomType_Double,
+            //SD.RoomType_Family,
+            //SD.RoomType_Single}
+            //);
+            return View();
         }
 
         // POST: Rooms/Create
@@ -69,7 +69,7 @@ namespace BookingSystem.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Roomid,Name,Roomtype,Description,Price,Maxcapacity,Availabilty,Hotelid,ImageFile,Hotelid")] Room room)
+        public async Task<IActionResult> Create([Bind("Roomid,Name,Roomtype,Description,Price,Maxcapacity,Hotelid,ImageFile,Hotelid")] Room room)
         {
             if (ModelState.IsValid)
             {
@@ -93,7 +93,7 @@ namespace BookingSystem.Controllers
                     room.Imagepath = fileName;
 
                 }
-                
+                room.Availabilty = 1;
                 _context.Add(room);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index), new { hotelId = room.Hotelid });

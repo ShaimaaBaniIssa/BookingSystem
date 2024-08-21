@@ -207,10 +207,7 @@ public partial class ModelContext :DbContext
             entity.Property(e => e.Maxcapacity)
                 .HasColumnType("NUMBER(38)")
                 .HasColumnName("MAXCAPACITY");
-            entity.Property(e => e.Name)
-                .HasMaxLength(35)
-                .IsUnicode(false)
-                .HasColumnName("NAME");
+            
             entity.Property(e => e.Price)
                 .HasColumnType("NUMBER")
                 .HasColumnName("PRICE");
@@ -375,7 +372,7 @@ public partial class ModelContext :DbContext
                 .HasColumnType("NUMBER(38)")
                 .HasColumnName("ID");
             entity.Property(e => e.Description)
-                .HasMaxLength(100)
+                .HasMaxLength(200)
                 .IsUnicode(false)
                 .HasColumnName("DESCRIPTION");
             entity.Property(e => e.Imgpath1)

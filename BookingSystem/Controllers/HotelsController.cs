@@ -61,6 +61,8 @@ namespace BookingSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Hotelid,Name,Address,Email,City,Country,Phonenumber,Description,ImageFile")] Hotel hotel)
         {
+            try
+            { 
             if (ModelState.IsValid)
             {
                 if (hotel.ImageFile != null)
@@ -85,10 +87,17 @@ namespace BookingSystem.Controllers
                 }
                 _context.Hotels.Add(hotel);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
             }
             return View(hotel);
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = ex.Message;
+            }
+            return RedirectToAction(nameof(Index));
+
         }
+
 
         // GET: Hotels/Edit/5
         public async Task<IActionResult> Edit(decimal? id)

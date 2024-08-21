@@ -14,7 +14,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Logopath)
+                @Html.DisplayNameFor(model => model.Logo)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Title)
@@ -23,13 +23,13 @@
                 @Html.DisplayNameFor(model => model.Description)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Imgpath1)
+                @Html.DisplayNameFor(model => model.ImageFile1)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Imgpath2)
+                @Html.DisplayNameFor(model => model.ImageFile2)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Imgpath3)
+                @Html.DisplayNameFor(model => model.ImageFile3)
             </th>
             <th></th>
         </tr>
@@ -38,23 +38,25 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Logopath)
+                    <img src=@Url.Content("~/Images/Project/Home/" + item.Logopath) asp-append-version="true" style="border-radius:20%;" width="100" height="100" />
+
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Title)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Description)
+                @item.Description.Substring(0,20)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Imgpath1)
+                    <img src=@Url.Content("~/Images/Project/Home/" + item.Imgpath1) asp-append-version="true" style="border-radius:20%;" width="100" height="100" />
+
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Imgpath2)
-            </td>
+                    <img src=@Url.Content("~/Images/Project/Home/" + item.Imgpath2) asp-append-version="true" style="border-radius:20%;" width="100" height="100" />
+                </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Imgpath3)
-            </td>
+                    <img src=@Url.Content("~/Images/Project/Home/" + item.Imgpath3) asp-append-version="true" style="border-radius:20%;" width="100" height="100" />
+                </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |

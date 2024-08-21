@@ -39,6 +39,7 @@
 
 	<ItemGroup>
 	  <Folder Include="wwwroot\Images\Hotel\" />
+	  <Folder Include="wwwroot\Images\Project\Home\" />
 	  <Folder Include="wwwroot\Images\Room\" />
 	  <Folder Include="wwwroot\Pdf\" />
 	</ItemGroup>

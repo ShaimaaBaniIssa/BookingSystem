@@ -1,0 +1,78 @@
+﻿@model IEnumerable<BookingSystem.Models.Booking>
+
+@{
+    ViewData["Title"] = "UserBookings";
+    Layout = "~/Views/Shared/_HomeLayout.cshtml";
+}
+
+<div class="container">
+<h4>UserBookings</h4>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Checkin)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Checkout)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Totalprice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Numberofpersons)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+          
+            <th>
+                @Html.DisplayNameFor(model => model.Roomid)
+            </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Room.Roomtype)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Room.Hotel.Name)
+                   
+                </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Checkin)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Checkout)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Totalprice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Numberofpersons)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+          
+            <td>
+                @Html.DisplayFor(modelItem => item.Roomid)
+            </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Room.Roomtype)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Room.Hotel.Name)
+                    </td>
+            <td>
+                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Bookingid">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+</div>

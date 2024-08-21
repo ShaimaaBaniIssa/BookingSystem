@@ -8,8 +8,6 @@ public partial class Room
 {
     public decimal Roomid { get; set; }
 
-    public string Name { get; set; } = null!;
-
     public string Roomtype { get; set; } = null!;
 
     public string Description { get; set; } = null!;

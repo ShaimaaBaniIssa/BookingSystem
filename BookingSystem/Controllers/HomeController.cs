@@ -19,29 +19,33 @@ namespace BookingSystem.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string? hotelId)
         {
-            string? userName = HttpContext.Session.GetString("Name");
-            int? roleId = HttpContext.Session.GetInt32("RoleId");
-            ViewBag.UserName = userName;
-            ViewBag.RoleId = roleId;
+         
 
-            ViewData["HotelNames"] = new SelectList(_context.Hotels, "Name", "Name");
-            ViewData["RoomsType"] = new SelectList(new List<string>
-            { SD.RoomType_Deluxe,
-            SD.RoomType_Premium,
-            SD.RoomType_Luxury,
-            SD.RoomType_Double,
-            SD.RoomType_Family,
-            SD.RoomType_Single}
-            );
+            ViewData["HotelNames"] = new SelectList(_context.Hotels, "Hotelid", "Name");
+            //ViewData["RoomsType"] = new SelectList(new List<string>
+            //{ SD.RoomType_Deluxe,
+            //SD.RoomType_Premium,
+            //SD.RoomType_Luxury,
+            //SD.RoomType_Double,
+            //SD.RoomType_Family,
+            //SD.RoomType_Single}
+            //);
+            
+            ViewData["RoomsType"] = new SelectList(_context.Rooms.Where(u => u.Hotelid == Convert.ToInt32(hotelId)), "Roomid", "Roomtype");
             var hotels = _context.Hotels.ToList();
-            var tuple = Tuple.Create<IEnumerable<Hotel>>(hotels);
+            var testimonials = _context.Testimonials.Include(u => u.Customer).Include(u => u.Room).ThenInclude(u => u.Hotel).ToList();
+            var homeData = _context.Homedata.SingleOrDefault(u=>u.Title== "Floria - Hotels Booking");
+            HttpContext.Session.SetString( "LogoPath",homeData.Logopath);
+
+            var tuple = Tuple.Create<IEnumerable<Hotel>, IEnumerable<Testimonial>,Homedatum>(hotels, testimonials,homeData);
 
 
             return View(tuple);
         }
-        public async Task<IActionResult> Rooms(decimal hotelId) {
+        public async Task<IActionResult> Rooms(decimal hotelId)
+        {
             var modelContext = _context.Rooms.Where(u => u.Hotelid == hotelId).ToList();
             //var result = modelContext.DistinctBy(u => u.Roomtype);
             return View(modelContext);
@@ -53,15 +57,59 @@ namespace BookingSystem.Controllers
             ViewBag.UserName = userName;
             ViewBag.RoleId = roleId;
 
-            var testimonials = _context.Testimonials.Include(u=>u.Customer).Where(u=>u.Roomid==roomId 
-            && u.Status==SD.Testimonial_Approved).ToList();
+            var testimonials = _context.Testimonials.Include(u => u.Customer).Where(u => u.Roomid == roomId
+            && u.Status == SD.Testimonial_Approved).ToList();
             ViewBag.Testimonials = testimonials;
 
-            var room = _context.Rooms.SingleOrDefault(u=>u.Roomid == roomId);
+            var room = _context.Rooms.SingleOrDefault(u => u.Roomid == roomId);
             return View(room);
 
         }
-        public ActionResult AddTestimony(string reviewText,decimal roomId)
+        public async Task <IActionResult> Profile()
+        {
+            var customerId = HttpContext.Session.GetInt32("Id");
+            var customer = await _context.Customers.SingleOrDefaultAsync(u=>u.Customerid== customerId);
+            return View(customer);
+        }
+        public async Task <IActionResult> EditProfile()
+        {
+            var customerId = HttpContext.Session.GetInt32("Id");
+            var customer = await _context.Customers.SingleOrDefaultAsync(u => u.Customerid == customerId);
+
+            return View(customer);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditProfile(decimal id, [Bind("Customerid,Firstname,Lastname,Email,Phonenumber")] Customer customer)
+        {
+            if (id != customer.Customerid)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(customer);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    TempData["error"] = "Error";
+                }
+                return RedirectToAction(nameof(Profile));
+            }
+            return View(customer);
+        }
+        public async Task<IActionResult> UserBookings()
+        {
+            var customerId = HttpContext.Session.GetInt32("Id");
+            var bookings = await _context.Bookings.Include(u=>u.Room).ThenInclude(u=>u.Hotel).Where(u=>u.Customerid== customerId).ToListAsync();
+
+            return View(bookings);
+        }
+        public ActionResult AddTestimony(string reviewText, decimal roomId)
         {
             Testimonial testimonial = new Testimonial()
             {
@@ -73,60 +121,59 @@ namespace BookingSystem.Controllers
             };
             _context.Testimonials.Add(testimonial);
             _context.SaveChanges();
-            return RedirectToAction("RoomDetails",new{ roomId=roomId});
+            return RedirectToAction("RoomDetails", new { roomId = roomId });
 
         }
-        public async Task<IActionResult> BookRoom(string? hotel,string? roomType, string? roomId, DateTime checkIn,DateTime checkOut,string numOfPersons)
+        public async Task<IActionResult> BookRoom(string? hotelId, string? roomId, DateTime checkIn, DateTime checkOut, string numOfPersons)
         {
             Room? roomData = null;
-           
-            if (roomType != null && hotel != null)
+
+            if (roomId != null && hotelId != null && checkIn != null && checkOut != null && numOfPersons != null)
             {
 
-            var hotelData = await _context.Hotels.FirstOrDefaultAsync(u => u.Name == hotel);
-            // room type is availble in this hotel and less than max Capacity of the room
-            roomData = await _context.Rooms.Include(u => u.Hotel).FirstOrDefaultAsync(r => r.Roomtype == roomType
-            && r.Hotelid == hotelData.Hotelid
-            && r.Availabilty == 1
-            && r.Maxcapacity >= Convert.ToInt32(numOfPersons));
-           
-            }
-            else if(roomId!=null)
-            {
+                var hotelData = await _context.Hotels.SingleOrDefaultAsync(u => u.Hotelid == Convert.ToInt32(hotelId));
+                // room type is availble in this hotel and less than max Capacity of the room
+
                 roomData = _context.Rooms.SingleOrDefault(r => r.Roomid == Convert.ToInt32(roomId)
                 && r.Availabilty == 1
             && r.Maxcapacity >= Convert.ToInt32(numOfPersons));
 
-            }
-            if (roomData == null)
-            {
-                TempData["error"] = "Room is Unavailable";
-                return RedirectToAction("Index");
 
-            }
-            int days = (checkOut.Date - checkIn.Date).Days;
-            Booking booking = new Booking()
-            {
-                Checkin = checkIn,
-                Checkout = checkOut,
-                Customerid = HttpContext.Session.GetInt32("Id"),
-                Roomid = roomData.Roomid,
-                Numberofpersons = Convert.ToInt32(numOfPersons),
-                Totalprice = roomData.Price * days,
-                Status = SD.BookingStatus_Pending
-            };
-            roomData.Availabilty = 0;
-            _context.Rooms.Update(roomData);
-            _context.Bookings.Add(booking);
-            _context.SaveChanges();
+                if (roomData == null)
+                {
+                    TempData["warning"] = "Room is Unavailable";
+                    return RedirectToAction("Index");
 
-            // note return back to books page
-            return RedirectToAction("Pay", "Payment",
-                new {
-                bookingId=booking.Bookingid
-            });
+                }
+                int days = (checkOut.Date - checkIn.Date).Days;
+                Booking booking = new Booking()
+                {
+                    Checkin = checkIn,
+                    Checkout = checkOut,
+                    Customerid = HttpContext.Session.GetInt32("Id"),
+                    Roomid = roomData.Roomid,
+                    Numberofpersons = Convert.ToInt32(numOfPersons),
+                    Totalprice = roomData.Price * days,
+                    Status = SD.BookingStatus_Pending
+                };
+                roomData.Availabilty = 0;
+                _context.Rooms.Update(roomData);
+                _context.Bookings.Add(booking);
+                _context.SaveChanges();
+
+                // note return back to books page
+                return RedirectToAction("Pay", "Payment",
+                    new
+                    {
+                        bookingId = booking.Bookingid
+                    });
+            }
+
+            TempData["warning"] = "Complete the required data";
+            return RedirectToAction("Index");
+
         }
 
-        
+
     }
 }

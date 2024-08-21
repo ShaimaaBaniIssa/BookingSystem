@@ -48,11 +48,12 @@ namespace BookingSystem.Controllers
         public IActionResult Pay(Bankcard bankcard,decimal price,decimal bookingId)
         {
         var card = _context.Bankcards.FirstOrDefault(u=>u.Cardnumber == bankcard.Cardnumber
-        //&& u.Cardholdername==bankcard.Cardholdername
-        //&& u.CardType == bankcard.CardType
-        //&& u.Cvv==bankcard.Cvv
-        //&& u.Expirydate==bankcard.Expirydate
-       
+        && u.Cardholdername == bankcard.Cardholdername
+        && u.CardType == bankcard.CardType
+        && u.Cvv == bankcard.Cvv
+        // note
+        //&& u.Expirydate == bankcard.Expirydate
+
         );
             if( card == null )
             {
@@ -64,6 +65,10 @@ namespace BookingSystem.Controllers
                 TempData["error"] = "You dont have enough balance";
                 return RedirectToAction("Index", new { bookingId });
             }
+
+            card.Balance = card.Balance - price;
+            _context.Bankcards.Update(card);
+
             var booking = _context.Bookings.Include(u=>u.Customer).Include(u=>u.Room)
                 .ThenInclude(u=>u.Hotel)
                 .FirstOrDefault(u => u.Bookingid == bookingId);
@@ -73,7 +78,7 @@ namespace BookingSystem.Controllers
 
             Invoice invoice = new Invoice()
             {
-                CardNumber = bankcard.Cardnumber, // note substring
+                CardNumber = $"**** **** **** {bankcard.Cardnumber.Substring(12,4)}", // note substring
                 CheckIn = booking.Checkin,
                 CheckOut = booking.Checkout,
                 CustomerName = $"{booking.Customer.Firstname} {booking.Customer.Lastname}",
@@ -87,7 +92,8 @@ namespace BookingSystem.Controllers
 
             //return File(pdf,  "application/pdf", "hello-world.pdf");
             //File(pdf, "application/pdf", "hello-world.pdf");
-            string fileName = $"invoice-{invoice.CustomerName.Split(' ')}.pdf";
+            
+            string fileName = $"invoice_{invoice.CustomerName.Trim()}_{Guid.NewGuid().ToString()}.pdf";
             string wwwrootPath = _environment.WebRootPath;
             string path = Path.Combine(wwwrootPath + "/Pdf/", fileName);
             _pdfGenerator.GetInvoice(invoice).GeneratePdf(path); //file name
@@ -102,7 +108,7 @@ namespace BookingSystem.Controllers
 
             // all booking 
 
-            return RedirectToAction("Pay", new { bookingId });
+            return RedirectToAction("UserBookings","Home");
 
         }
         public ActionResult Invoice()

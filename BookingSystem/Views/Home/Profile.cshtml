@@ -1,0 +1,42 @@
+﻿@model BookingSystem.Models.Customer
+
+@{
+    ViewData["Title"] = "Profile";
+    Layout = "~/Views/Shared/_HomeLayout.cshtml";
+}
+
+<h1>Profile</h1>
+
+<div class="container">
+    
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Firstname)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Firstname)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Lastname)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Lastname)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Phonenumber)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Phonenumber)
+        </dd>
+    </dl>
+    <div>
+        <a asp-action="EditProfile" asp-route-id="@Model?.Customerid">Edit</a>
+    </div>
+</div>
+

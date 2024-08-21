@@ -47,10 +47,10 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Address)
+                    @item.Address.Substring(0,10)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Email)
+                    @item.Email.Substring(0, 20)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.City)
@@ -62,7 +62,7 @@
                 @Html.DisplayFor(modelItem => item.Phonenumber)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Description)
+                @item.Description.Substring(0,20)
             </td>
             <td>
                     <img src=@Url.Content("~/Images/Hotel/" + item.Imagepath) asp-append-version="true" style="border-radius:20%;" width="100" height="100" />
@@ -71,7 +71,7 @@
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Hotelid">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Hotelid">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Hotelid">Delete</a>
+                    <a asp-action="Delete" asp-route-id="@item.Hotelid">Delete</a> |
                     <a asp-action="Index" asp-controller="Rooms" asp-route-hotelId="@item.Hotelid">Rooms</a>
 
             </td>

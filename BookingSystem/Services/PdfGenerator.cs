@@ -29,7 +29,7 @@ namespace BookingSystem.Services
                          });
 
 
-                         row.ConstantItem(100).Height(50).AlignRight().AlignMiddle().Image("C:\\Users\\shaym\\source\\repos\\BookingSystem\\BookingSystem\\wwwroot\\HomeAssest\\img\\logo.png", ImageScaling.FitArea);
+                         row.ConstantItem(100).Height(50).AlignRight().AlignMiddle().Image("C:\\Users\\shaym\\source\\repos\\BookingSystem\\BookingSystem\\wwwroot\\Images\\Project\\Home\\a0264c81-f804-45f0-b043-fb9f8d63dae9_logo.png", ImageScaling.FitArea);
                      });
 
                      page.Content().Column(column =>
@@ -71,7 +71,7 @@ namespace BookingSystem.Services
                          {
 
                              innerColumn.Item().Text("Total Price:").FontSize(14).SemiBold().AlignRight().FontColor(Colors.Black);
-                             innerColumn.Item().Text($"${invoice.TotalPrice?.ToString()} JOD").FontSize(16).Bold().AlignRight().FontColor(Colors.Red.Medium);
+                             innerColumn.Item().Text($"{invoice.TotalPrice?.ToString()} JOD").FontSize(16).Bold().AlignRight().FontColor(Colors.Red.Medium);
                          });
                      });
 
