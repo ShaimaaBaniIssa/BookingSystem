@@ -27,7 +27,10 @@
                 @Html.DisplayNameFor(model => model.Maxcapacity)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Availabilty)
+                @Html.DisplayNameFor(model => model.BookedFrom)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BookedTo)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Imagepath)
@@ -58,20 +61,11 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Maxcapacity)
             </td>
-                @if (item.Availabilty == 1)
-                {
-                    <td>
-                        Yes
-                    </td>
-                }
-                else
-                {
-                    <td>
-                        No
-                    </td>
-                }
-               
+                @Html.DisplayFor(modelItem => item.BookedFrom)
             <td>
+                </td>
+                @Html.DisplayFor(modelItem => item.BookedTo)
+                <td>
                     <img src=@Url.Content("~/Images/Room/" + item.Imagepath) asp-append-version="true" style="border-radius:20%;" width="100" height="100" />
                 </td>
            

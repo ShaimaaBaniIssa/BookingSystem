@@ -93,7 +93,7 @@ namespace BookingSystem.Controllers
                     room.Imagepath = fileName;
 
                 }
-                room.Availabilty = 1;
+                
                 _context.Add(room);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index), new { hotelId = room.Hotelid });

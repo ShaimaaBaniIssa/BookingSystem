@@ -190,9 +190,7 @@ public partial class ModelContext :DbContext
                 .ValueGeneratedOnAdd()
                 .HasColumnType("NUMBER(38)")
                 .HasColumnName("ROOMID");
-            entity.Property(e => e.Availabilty)
-                .HasColumnType("NUMBER(38)")
-                .HasColumnName("AVAILABILTY");
+           
             entity.Property(e => e.Description)
                 .HasMaxLength(200)
                 .IsUnicode(false)
@@ -215,6 +213,12 @@ public partial class ModelContext :DbContext
                 .HasMaxLength(35)
                 .IsUnicode(false)
                 .HasColumnName("ROOMTYPE");
+            entity.Property(e => e.BookedFrom)
+              .HasColumnType("DATE")
+              .HasColumnName("BOOKEDFROM");
+            entity.Property(e => e.BookedTo)
+              .HasColumnType("DATE")
+              .HasColumnName("BOOKEDTO");
 
             entity.HasOne(d => d.Hotel).WithMany(p => p.Rooms)
                 .HasForeignKey(d => d.Hotelid)
@@ -249,7 +253,9 @@ public partial class ModelContext :DbContext
             entity.Property(e => e.TDate)
                .HasColumnType("DATE")
                .HasColumnName("TDATE");
-
+            entity.Property(e => e.Rating)
+                .HasColumnType("NUMBER(38)")
+                .HasColumnName("RATING");
             entity.HasOne(d => d.Customer).WithMany(p => p.Testimonials)
                 .HasForeignKey(d => d.Customerid)
                 .OnDelete(DeleteBehavior.SetNull)

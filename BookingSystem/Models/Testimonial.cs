@@ -19,4 +19,6 @@ public partial class Testimonial
 
 
     public string? Status { get; set; }
+    public decimal? Rating { get; set; }
+
 }

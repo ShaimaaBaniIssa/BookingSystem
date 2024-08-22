@@ -3,7 +3,53 @@
 @{
     ViewData["Title"] = "RoomDetails";
     Layout = "~/Views/Shared/_HomeLayout.cshtml";
+    var userId = Context.Session.GetString("Id");
+
 }
+<style>
+    .rating {
+        float: left;
+        border: none;
+    }
+
+        .rating:not(:checked) > input {
+            position: absolute;
+            top: -9999px;
+            clip: rect(0, 0, 0, 0);
+        }
+
+        .rating:not(:checked) > label {
+            float: right;
+            width: 1em;
+            padding: 0 .1em;
+            overflow: hidden;
+            white-space: nowrap;
+            cursor: pointer;
+            font-size: 200%;
+            line-height: 1.2;
+            color: #ddd;
+        }
+
+            .rating:not(:checked) > label:before {
+                content: '★ ';
+            }
+
+        .rating > input:checked ~ label {
+            color: #f70;
+        }
+
+        .rating:not(:checked) > label:hover, .rating:not(:checked) > label:hover ~ label {
+            color: gold;
+        }
+
+        .rating > input:checked + label:hover, .rating > input:checked + label:hover ~ label, .rating > input:checked ~ label:hover, .rating > input:checked ~ label:hover ~ label, .rating > label:hover ~ input:checked ~ label {
+            color: #ea0;
+        }
+
+        .rating > label:active {
+            position: relative;
+        }
+</style>
 
 
 <!-- Breadcrumb Section Begin -->
@@ -43,13 +89,12 @@
                       
                     </div>
                 </div>
-                <div class="rd-reviews">
-                    <h4>Testimonials</h4>
-                    @if (ViewBag.Testimonials.Count == 0)
-                    {
-                        <h4>No data yet</h4>
+                @if (ViewBag.Testimonials.Count != 0)
+                {
 
-                    }
+                <div class="rd-reviews" >
+                    <h4>Testimonials</h4>
+                   
                    
                     @foreach (var item in ViewBag.Testimonials)
                     {
@@ -60,11 +105,18 @@
                             <div class="ri-text">
                                 <span>@item.TDate</span>
                                 <div class="rating">
-                                    <i class="icon_star"></i>
-                                    <i class="icon_star"></i>
-                                    <i class="icon_star"></i>
-                                    <i class="icon_star"></i>
-                                    <i class="icon_star-half_alt"></i>
+                                    @for(int i=1; i<=item.Rating; i++)
+                                        {
+                                            <i class="mdi mdi-star"></i>
+                                        }
+                                        @for (int i = 1; i <= (5-item.Rating); i++)
+                                        {
+                                            <i class="mdi mdi-star-outline"></i>
+                                        }
+
+                                        
+                                       
+                                   
                                 </div>
                                 <h5>@item.Customer.Firstname</h5>
                                 <p>
@@ -75,23 +127,31 @@
 
                     }
                     
-                </div>
-                <div class="review-add">
+                    </div>
+                }
+                @* only if login note *@
+                <div class="review-add" >
                     <h4>Add Review</h4>
                     <form asp-action="AddTestimony" class="ra-form">
                         <div class="row">
                             <input name="roomId" value="@Model.Roomid" hidden>
 
                             <div class="col-lg-12">
-                                <div>
-                                    <h5>You Rating:</h5>
-                                    <div class="rating">
-                                        <i class="icon_star"></i>
-                                        <i class="icon_star"></i>
-                                        <i class="icon_star"></i>
-                                        <i class="icon_star"></i>
-                                        <i class="icon_star-half_alt"></i>
-                                    </div>
+                                <div class="row align-items-center">
+                                    <h5>Your Rating:</h5>
+                                    <fieldset class="rating">
+                                        <input type="radio" id="star5" name="rating" value="5" />
+                                        <label for="star5">5 stars</label>
+                                        <input type="radio" id="star4" name="rating" value="4" />
+                                        <label for="star4">4 stars</label>
+                                        <input type="radio" id="star3" name="rating" value="3" />
+                                        <label for="star3">3 stars</label>
+                                        <input type="radio" id="star2" name="rating" value="2" />
+                                        <label for="star2">2 stars</label>
+                                        <input type="radio" id="star1" name="rating" value="1" />
+                                        <label for="star1">1 star</label>
+                                    </fieldset>
+                                   
                                 </div>
                                 <textarea name="reviewText" placeholder="Your Review"></textarea>
                                 <button type="submit">Submit Now</button>
@@ -124,9 +184,11 @@
                             </select>
                         </div>
 
-                        @if (ViewBag.RoleId == 1)
+                        @if (userId != null)
                         {
                             <button type="submit">Book Now</button>
+                            <button asp-action="UserBookings" asp-controller="Home" type="submit">Save and pay later</button>
+
 
                         }
                         else

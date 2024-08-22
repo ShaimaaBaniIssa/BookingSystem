@@ -1,8 +1,8 @@
 ﻿@model Tuple<IEnumerable<Hotel>, IEnumerable<Testimonial>,Homedatum>
 @{
     ViewData["Title"] = "Home Page";
-   Layout = "~/Views/Shared/_HomeLayout.cshtml";
-   
+    Layout = "~/Views/Shared/_HomeLayout.cshtml";
+    var userId = Context.Session.GetString("Id");
 }
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script>
@@ -34,6 +34,8 @@
                         <div class="select-option">
                             <label for="hotel">Hotel:</label>
                             <select name="hotelId" asp-items="ViewBag.HotelNames" id="hotelselectlist">
+                                <option value="">--Choose an option--</option>
+
                             </select>
                         </div>
                         <div class="select-option">
@@ -54,15 +56,25 @@
                         </div>
                         <div class="select-option">
                             <label for="numOfPersons">Number Of Persons:</label>
+                            
                             <select name="numOfPersons" id="numOfPersons">
-                                <option value="2">2 Adults</option>
-                                <option value="3">3 Adults</option>
+                                <option value="">--Choose an option--</option>
+                                <option value="1">1 Person</option>
+                                <option value="2">2 Persons</option>
+                                <option value="3">3 Persons</option>
+                                <option value="4">4 Persons</option>
+                                <option value="5">5 Persons</option>
+                                <option value="6">6 Persons</option>
+                                <option value="7">7 Persons</option>
+
                             </select>
                         </div>
                         
-                        @if (ViewBag.RoleId == 1)
+                        @if (userId != null)
                         {
                             <button type="submit">Book Now</button>
+                            <button asp-action="BookRoom" asp-route-pay="false">Save and pay later</button>
+
 
                         }
                         else
@@ -196,7 +208,7 @@
     </div>
 </section>
 <!-- Services Section End -->
-<!-- Blog Section Begin -->
+<!-- Hotel Section Begin -->
 <section class="blog-section spad">
     <div class="container">
         <div class="row">
@@ -219,6 +231,14 @@
             </div>
             }
             
+        </div>
+        <div class="col-lg-12">
+            <div class="room-pagination">
+                <a asp-action="Index" asp-route-pageNumber="1">1</a>
+                <a asp-action="Index" asp-route-pageNumber="2">2</a>
+                <a asp-action="Index" asp-route-pageNumber="3">3</a>
+
+            </div>
         </div>
     </div>
 </section>
@@ -372,11 +392,14 @@
                             </p>
                             <div class="ti-author">
                                 <div class="rating">
-                                    <i class="icon_star"></i>
-                                    <i class="icon_star"></i>
-                                    <i class="icon_star"></i>
-                                    <i class="icon_star"></i>
-                                    <i class="icon_star-half_alt"></i>
+                                    @for (int i = 1; i <= item.Rating; i++)
+                                    {
+                                        <i class="mdi mdi-star"></i>
+                                    }
+                                    @for (int i = 1; i <= (5 - item.Rating); i++)
+                                    {
+                                        <i class="mdi mdi-star-outline"></i>
+                                    }
                                 </div>
                                 <h5> - @item.Customer.Firstname</h5>
                             </div>

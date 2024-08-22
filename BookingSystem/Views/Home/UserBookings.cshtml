@@ -38,16 +38,18 @@
                    
                 </th>
             <th></th>
+                <th></th>
+
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Checkin)
+                        @item.Checkin?.ToString("dd MMMM yyyy")
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Checkout)
+                        @item.Checkout?.ToString("dd MMMM yyyy")
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Totalprice)
@@ -62,15 +64,23 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Roomid)
             </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Room.Roomtype)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Room.Hotel.Name)
-                    </td>
             <td>
-                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Bookingid">Delete</a>
+                @Html.DisplayFor(modelItem => item.Room.Roomtype)
             </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Room.Hotel.Name)
+            </td>
+            @if(item.Status.Equals(SD.BookingStatus_Pending))
+            {
+            <td>
+            <a class="btn btn-success" asp-controller="Payment" asp-action="Pay" asp-route-bookingId="@item.Bookingid">Pay</a>
+            </td>
+            <td>
+                            <a class="btn btn-danger" asp-action="CancelBook" asp-route-id="@item.Bookingid">Cancel</a>
+
+            </td>
+            }
+                  
         </tr>
 }
     </tbody>

@@ -1,0 +1,72 @@
+﻿@model IEnumerable<Hotel>
+
+@{
+    ViewData["Title"] = "Hotels";
+    Layout = "~/Views/Shared/_HomeLayout.cshtml";
+}
+<div class="breadcrumb-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 align-items-center">
+                <div class="breadcrumb-text">
+                    <h2>Our Hotels</h2>
+                  
+                        <form style="width:250px" asp-action="Hotels" class="fn-form">
+                            <input type="text" name="hotelName" placeholder="Find Hotel">
+                            <button type="submit"><i class="fa fa-search"></i></button>
+                        </form>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<section class="rooms-section spad">
+    <div class="container">
+        <div class="row">
+            @foreach(var item in Model)
+            {
+                <div class="col-lg-4 col-md-6">
+                <div class="room-item">
+                        <img src=@Url.Content("~/Images/Hotel/" + item.Imagepath) alt="">
+                    <div class="ri-text">
+                        <h4>@item.Name</h4>
+                        <h3 style="font-size:14px">@item.Address</h3>
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td class="r-o">City:</td>
+                                    <td>@item.City</td>
+                                </tr>
+                                <tr>
+                                    <td class="r-o">Country:</td>
+                                        <td>@item.Country</td>
+                                </tr>
+                                <tr>
+                                    <td class="r-o">Phone Number</td>
+                                    <td>@item.Phonenumber</td>
+                                </tr>
+                                <tr>
+                                    <td class="r-o">Description:</td>
+                                    <td>@item.Description</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                            <a asp-action="Rooms" asp-route-hotelId="@item.Hotelid" class="primary-btn">Rooms</a>
+                    </div>
+                </div>
+            </div>
+            }
+            
+
+            <div class="col-lg-12">
+                <div class="room-pagination">
+                    <a asp-action="Hotels" asp-route-pageNumber="1">1</a>
+                    <a asp-action="Hotels" asp-route-pageNumber="2">2</a>
+                    <a asp-action="Hotels" asp-route-pageNumber="3">3</a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

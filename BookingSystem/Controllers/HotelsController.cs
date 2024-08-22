@@ -88,7 +88,7 @@ namespace BookingSystem.Controllers
                 _context.Hotels.Add(hotel);
                 await _context.SaveChangesAsync();
             }
-            return View(hotel);
+            
             }
             catch (Exception ex)
             {

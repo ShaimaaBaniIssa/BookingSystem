@@ -29,10 +29,10 @@ namespace BookingSystem.Controllers
 
             ViewBag.NumOfRegisteredUsers = _context.UserLogins.Count();
 
-            List<HotelRooms> availableRooms = _context.Rooms.Where(u=>u.Availabilty==1).Include(r=>r.Hotel)
+            List<HotelRooms> availableRooms = _context.Rooms.Where(u=>u.BookedFrom==null && u.BookedTo==null).Include(r=>r.Hotel)
                 .GroupBy(u => u.Hotelid).Select(grp => new HotelRooms() { HotelName =grp.First().Hotel.Name , NumOfRooms = grp.Count()}).ToList();
 
-            List<HotelRooms> bookedRooms = _context.Rooms.Where(u => u.Availabilty == 0).Include(r => r.Hotel)
+            List<HotelRooms> bookedRooms = _context.Rooms.Where(u => u.BookedFrom != null && u.BookedTo != null).Include(r => r.Hotel)
                 .GroupBy(u => u.Hotelid).Select(grp => new HotelRooms() { HotelName = grp.First().Hotel.Name, NumOfRooms = grp.Count() }).ToList();
 
             var tuple = Tuple.Create<List<HotelRooms>, List<HotelRooms>>(availableRooms, bookedRooms);
@@ -74,8 +74,8 @@ namespace BookingSystem.Controllers
                    
                 }
             
-            
-
         }
+        
+
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BookingSystem.Models;
+using BookingSystem.Utility;
 
 namespace BookingSystem.Controllers
 {
@@ -23,6 +24,50 @@ namespace BookingSystem.Controllers
         {
             var modelContext = _context.Bookings.Include(b => b.Customer).Include(b => b.Room);
             return View(await modelContext.ToListAsync());
+        }
+        public async Task<IActionResult> BenefitsReport()
+        {
+            var modelContext = _context.Bookings.Include(b => b.Customer).Include(b => b.Room);
+            ViewBag.Benefit = modelContext.Sum(u => u.Totalprice);
+
+            return View(await modelContext.ToListAsync());
+        }
+        [HttpPost]
+        public async Task<IActionResult> BenefitsReport(DateTime? startDate, DateTime? endDate)
+        {
+            var modelContext = _context.Bookings.Include(b => b.Customer).Include(b => b.Room);
+
+
+
+            if (startDate == null && endDate == null)
+            { 
+                ViewBag.Benefit = modelContext.Sum(u => u.Totalprice);
+                return View(modelContext); }
+
+            else if (startDate != null && endDate == null)
+            {
+                var result = await modelContext.Where(x => x.Checkin.Value.Date >= startDate).ToListAsync();
+                ViewBag.Benefit = result.Sum(u => u.Totalprice);
+                return View(result);
+            }
+            else if (startDate == null && endDate != null)
+            {
+                var result = await modelContext.Where(x => x.Checkout.Value.Date <= endDate).ToListAsync();
+                ViewBag.Benefit = result.Sum(u => u.Totalprice);
+
+                return View(result);
+            }
+            else
+            {
+                var result = await modelContext
+                    .Where(x => x.Checkout.Value.Date <= endDate && x.Checkin.Value.Date >= startDate)
+                    .ToListAsync();
+                ViewBag.Benefit = result.Sum(u => u.Totalprice);
+
+                return View(result);
+            }
+
+
         }
         [HttpPost]
         public async Task<IActionResult> Search(DateTime? startDate, DateTime? endDate)
@@ -53,6 +98,20 @@ namespace BookingSystem.Controllers
             }
 
 
+        }
+        public IActionResult CheckOut(decimal bookingId)
+        {
+            var booking = _context.Bookings.SingleOrDefault(u => u.Bookingid == bookingId);
+            var room = _context.Rooms.SingleOrDefault(u => u.Roomid == booking.Roomid);
+            room.BookedFrom = null;
+            room.BookedTo = null;
+
+            booking.Status = SD.BookingStatus_CheckedOut;
+            _context.Bookings.Update(booking);
+            _context.Rooms.Update(room);
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(Search));
         }
         // GET: Bookings/Details/5
         public async Task<IActionResult> Details(decimal? id)
