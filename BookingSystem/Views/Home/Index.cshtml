@@ -34,7 +34,7 @@
                         <div class="select-option">
                             <label for="hotel">Hotel:</label>
                             <select name="hotelId" asp-items="ViewBag.HotelNames" id="hotelselectlist">
-                                <option value="">--Choose an option--</option>
+                                
 
                             </select>
                         </div>
@@ -236,7 +236,7 @@
             <div class="room-pagination">
                 <a asp-action="Index" asp-route-pageNumber="1">1</a>
                 <a asp-action="Index" asp-route-pageNumber="2">2</a>
-                <a asp-action="Index" asp-route-pageNumber="3">3</a>
+                <a asp-action="Hotels" >See All</a>
 
             </div>
         </div>

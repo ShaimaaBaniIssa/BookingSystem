@@ -1,47 +1,62 @@
-﻿@model Customer
+﻿@model BookingSystem.Models.Customer
+
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "EditProfile";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
-<h1>Edit</h1>
 
-<h4>Hotel</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="EditProfile">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            
-            <input type="hidden" asp-for="Customerid" />
-           
-            <div class="form-group">
-                <label asp-for="Firstname" class="control-label"></label>
-                <input asp-for="Firstname" class="form-control" />
-                <span asp-validation-for="Firstname" class="text-danger"></span>
+
+<div class="container mb-2">
+    <div class="card shadow border-0 ">
+
+        <div class="card-header bg-secondary bg-gradient text-dark ml-0 py-4 ">
+
+            <div class="row text-center">
+
+                <h4 class="text-dark fw-bolder">Edit Profile</h4>
+
             </div>
-            <div class="form-group">
-                <label asp-for="Lastname" class="control-label"></label>
-                <input asp-for="Lastname" class="form-control" />
-                <span asp-validation-for="Lastname" class="text-danger"></span>
+
+        </div>
+        <div class="card-body text-dark">
+            <div class="container rounded p-2">
+                <div class="row">
+                    <div class="col-12  pb-2">
+
+                        <form asp-action="EditProfile" method="post">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <input type="hidden" asp-for="Customerid" />
+                            <div class="form-group">
+                                <label asp-for="Firstname" class="control-label"></label>
+                                <input asp-for="Firstname" class="form-control" />
+                                <span asp-validation-for="Firstname" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Lastname" class="control-label"></label>
+                                <input asp-for="Lastname" class="form-control" />
+                                <span asp-validation-for="Lastname" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Email" class="control-label"></label>
+                                <input asp-for="Email" class="form-control" />
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Phonenumber" class="control-label"></label>
+                                <input asp-for="Phonenumber" class="form-control" />
+                                <span asp-validation-for="Phonenumber" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" value="Save" class="btn btn-primary" />
+                            </div>
+                        </form>
+
+                    </div>
+
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Phonenumber" class="control-label"></label>
-                <input asp-for="Phonenumber" class="form-control" />
-                <span asp-validation-for="Phonenumber" class="text-danger"></span>
-            </div>
-           
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
+
     </div>
 </div>
 
-<div>
-    <a asp-action="Profile">Back to List</a>
-</div>

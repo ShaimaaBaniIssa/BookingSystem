@@ -77,9 +77,9 @@ namespace BookingSystem.Services
 
                      page.Footer().AlignCenter().Text(text =>
                      {
-                         text.Span("Thank you for staying with us at ").FontSize(10);
+                         text.Span("Thank you for choosing ").FontSize(10);
                          text.Span($"{invoice.HotelName}.").FontSize(10).SemiBold();
-                         text.Line("We look forward to welcoming you back!").FontSize(10);
+                         text.Line("We are delighted to have you as our guest and appreciate your trust in us.").FontSize(10);
                      });
                  });
                 });

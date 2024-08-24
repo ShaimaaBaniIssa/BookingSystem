@@ -15,37 +15,34 @@
     <link href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css" rel="stylesheet" />
 </head>
 <body>
-    <div class="row">
-        <div class="col-6">
+
+    <h1 class="text-primary mb-4">Bookings</h1>
+
+    <div class="row mb-4">
+        <div class="col-4 ">
             <form asp-action="Search" method="post">
-                <input type="date" class="form-control" name="startDate" placeholder="Start Date">
-                <input type="date" class="form-control" name="endDate" placeholder="End Date">
-
-
-
-                <button type="submit" class="btn btn-dark">Search</button>
-
-
+                <input type="date" class="form-control w-75"  name="startDate" placeholder="Start Date">
+                <input type="date" class="form-control w-75 w mt-2" name="endDate" placeholder="End Date">
+                <button type="submit" class="btn btn-primary w-75 mt-2">Search</button>
 
             </form>
         </div>
+     
     </div>
-    <table class="table table-striped table-borderless table-hover" id="searchTable">
+    <table class="table table-striped table-borderless table-hover mt-3" id="searchTable">
         <thead>
             <tr>
-                <th>Booking Id</th>
+                <th>Book Id</th>
                 <th>First Name</th>
                 <th>Check in Date</th>
                 <th>Check out Date</th>
-                <th>Number of persons</th>
+                <th>Num of persons</th>
                 <th>Status</th>
                 <th>Room id</th>
-                <th>Room type</th>
-                <th>Price per day</th>
+                <th>Price/day</th>
                 <th>Total Price</th>
                 <th></th>
-
-                
+                <th></th>
 
             </tr>
         </thead>
@@ -60,7 +57,7 @@
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Bookingid)
+                        @item.Bookingid
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Customer.Firstname)
@@ -76,17 +73,33 @@
                         @Html.DisplayFor(modelItem => item.Numberofpersons)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Status)
+                        @if (item.Status.Equals(SD.BookingStatus_Pending))
+                        {
+                            <label class="badge badge-warning"> @Html.DisplayFor(modelItem => item.Status)</label>
+
+                        }
+                        @if (item.Status.Equals(SD.BookingStatus_Confirmed))
+                        {
+                            <label class="badge badge-success"> @Html.DisplayFor(modelItem => item.Status)</label>
+
+                        }
+                        @if (item.Status.Equals(SD.BookingStatus_Cancelled))
+                        {
+                            <label class="badge badge-danger"> @Html.DisplayFor(modelItem => item.Status)</label>
+
+                        }
+                        @if (item.Status.Equals(SD.BookingStatus_CheckedOut) || item.Status.Equals(SD.BookingStatus_CheckedIn))
+                        {
+                            <label class="badge badge-info"> @Html.DisplayFor(modelItem => item.Status)</label>
+
+                        }
 
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Roomid)
 
                     </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Room.Roomtype)
-
-                    </td>
+                   
                     <td>
                         @Html.DisplayFor(modelItem => item.Room.Price)
 
@@ -99,8 +112,14 @@
                     {
                          <td>
                         <a class="btn btn-info" asp-controller="Bookings" asp-action="CheckOut" asp-route-bookingId="@item.Bookingid">Check Out</a>
-
                     </td>
+                    }
+                    @if (!item.Status.Equals(SD.BookingStatus_CheckedOut) && !item.Equals(SD.BookingStatus_CheckedIn))
+                    {
+                        <td>
+                            <a class="btn btn-danger" asp-controller="Bookings" asp-action="Cancel" asp-route-bookingId="@item.Bookingid">Cancel</a>
+
+                        </td>
                     }
                    
 

@@ -7,9 +7,10 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Connect Plus</title>
+    <title>Admin Dashboard</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="~/AdminAssest/assets/vendors/mdi/css/materialdesignicons.min.css">
+
     <link rel="stylesheet" href="~/AdminAssest/assets/vendors/flag-icon-css/css/flag-icon.min.css">
     <link rel="stylesheet" href="~/AdminAssest/assets/vendors/css/vendor.bundle.base.css">
     <!-- endinject -->
@@ -22,8 +23,9 @@
     <!-- Layout styles -->
     <link rel="stylesheet" href="~/AdminAssest/assets/css/style.css">
     <!-- End layout styles -->
-    <link rel="shortcut icon" href="~/AdminAssest/assets/images/favicon.png" />
+    
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.css" />
+    <link rel="stylesheet" href="~/AdminAssest/assets/css/chartStyle.css" />
 
 </head>
 <body>
@@ -31,23 +33,10 @@
         <!-- partial:partials/_navbar.html -->
         <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
             <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-                <a class="navbar-brand brand-logo" href="index.html"><img src="~/AdminAssest/assets/images/logo.svg" alt="logo" /></a>
-                <a class="navbar-brand brand-logo-mini" href="index.html"><img src="~/AdminAssest/assets/images/logo-mini.svg" alt="logo" /></a>
+                <a class="navbar-brand text-light" href="index.html">Admin Dashboard</a>
             </div>
             <div class="navbar-menu-wrapper d-flex align-items-stretch">
-                <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
-                    <span class="mdi mdi-menu"></span>
-                </button>
-                <div class="search-field d-none d-xl-block">
-                    <form class="d-flex align-items-center h-100" action="#">
-                        <div class="input-group">
-                            <div class="input-group-prepend bg-transparent">
-                                <i class="input-group-text border-0 mdi mdi-magnify"></i>
-                            </div>
-                            <input type="text" class="form-control bg-transparent border-0" placeholder="Search products">
-                        </div>
-                    </form>
-                </div>
+              
                 <ul class="navbar-nav navbar-nav-right">
                     @if (ViewBag.UserName == null)
                     {
@@ -79,108 +68,54 @@
                     </li>
                    
                     <li  class="nav-item">
-                        <a asp-action="Profile" asp-controller="Admin"  class="nav-link" >
+                        <a asp-action="Index" asp-controller="Customers"  class="nav-link" >
                             <span class="icon-bg"><i class="mdi mdi-contacts menu-icon"></i></span>
-                            <span class="menu-title">Profile</span>
+                            <span class="menu-title">Customers</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a asp-action="Index" asp-controller="Hotels" class="nav-link" >
-                            <span class="icon-bg"><i class="mdi mdi-format-list-bulleted menu-icon"></i></span>
+                            <span class="icon-bg"><i class="mdi mdi-houzz menu-icon"></i></span>
                             <span class="menu-title">Hotels</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a asp-action="Index" asp-controller="Testimonials" class="nav-link" >
-                            <span class="icon-bg"><i class="mdi mdi-chart-bar menu-icon"></i></span>
+                            <span class="icon-bg"><i class="mdi mdi-comment-text menu-icon"></i></span>
                             <span class="menu-title">Testimonials</span>
+                            <div class="badge badge-info">@ViewBag.NewTestimonials</div>
+
                         </a>
+
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="pages/tables/basic-table.html">
-                            <span class="icon-bg"><i class="mdi mdi-table-large menu-icon"></i></span>
-                            <span class="menu-title">Tables</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
-                            <span class="icon-bg"><i class="mdi mdi-lock menu-icon"></i></span>
-                            <span class="menu-title">User Pages</span>
+                        <a class="nav-link" data-toggle="collapse" asp-action="Search" asp-controller="Bookings" aria-expanded="true" aria-controls="ui-basic">
+                            <span class="icon-bg"><i class="mdi mdi-calendar-plus menu-icon"></i></span>
+                            <span class="menu-title">Bookings</span>
                             <i class="menu-arrow"></i>
                         </a>
-                        <div class="collapse" id="auth">
+                        <div class="collapse show" id="ui-basic" style="">
                             <ul class="nav flex-column sub-menu">
-                                <li class="nav-item"> <a class="nav-link" href="pages/samples/blank-page.html"> Blank Page </a></li>
-                                <li class="nav-item"> <a class="nav-link" href="pages/samples/login.html"> Login </a></li>
-                                <li class="nav-item"> <a class="nav-link" href="pages/samples/register.html"> Register </a></li>
-                                <li class="nav-item"> <a class="nav-link" href="pages/samples/error-404.html"> 404 </a></li>
-                                <li class="nav-item"> <a class="nav-link" href="pages/samples/error-500.html"> 500 </a></li>
+                                <li class="nav-item"> <a class="nav-link" asp-action="Search" asp-controller="Bookings">Bookings Details</a></li>
+                                <li class="nav-item"> <a class="nav-link" asp-action="BenefitsReport" asp-controller="Bookings">Benefits Report</a></li>
+                                
                             </ul>
                         </div>
                     </li>
-                    <li class="nav-item documentation-link">
-                        <a class="nav-link" href="http://www.bootstrapdash.com/demo/connect-plus-free/jquery/documentation/documentation.html" target="_blank">
-                            <span class="icon-bg">
-                                <i class="mdi mdi-file-document-box menu-icon"></i>
-                            </span>
-                            <span class="menu-title">Documentation</span>
-                        </a>
-                    </li>
-                    <li class="nav-item sidebar-user-actions">
-                        <div class="user-details">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <div class="d-flex align-items-center">
-                                        <div class="sidebar-profile-img">
-                                            <img src="~/AdminAssest/assets/images/faces/face28.png" alt="image">
-                                        </div>
-                                        <div class="sidebar-profile-text">
-                                            <p class="mb-1">Henry Klein</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="badge badge-danger">3</div>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="nav-item sidebar-user-actions">
-                        <div class="sidebar-user-menu">
-                            <a href="#" class="nav-link">
-                                <i class="mdi mdi-settings menu-icon"></i>
-                                <span class="menu-title">Settings</span>
-                            </a>
-                        </div>
-                    </li>
-                    <li class="nav-item sidebar-user-actions">
-                        <div class="sidebar-user-menu">
-                            <a href="#" class="nav-link">
-                                <i class="mdi mdi-speedometer menu-icon"></i>
-                                <span class="menu-title">Take Tour</span>
-                            </a>
-                        </div>
-                    </li>
-                    <li class="nav-item sidebar-user-actions">
-                        <div class="sidebar-user-menu">
-                            <a href="#" class="nav-link">
-                                <i class="mdi mdi-logout menu-icon"></i>
-                                <span class="menu-title">Log Out</span>
-                            </a>
-                        </div>
-                    </li>
+                   
+                  
                 </ul>
             </nav>
-            <!-- partial -->
+      
             <div class="main-panel">
                 <div class="content-wrapper">
                     @RenderBody()
                 </div>
-                <!-- content-wrapper ends -->
-                <!-- partial:partials/_footer.html -->
+               
                 <footer class="footer">
                     <div class="footer-inner-wraper">
                         <div class="d-sm-flex justify-content-center justify-content-sm-between">
-                            <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">Copyright © bootstrapdash.com 2020</span>
-                            <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center"> Free <a href="https://www.bootstrapdash.com/" target="_blank">Bootstrap dashboard templates</a> from Bootstrapdash.com</span>
+                            <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">Copyright © Admin Page</span>
                         </div>
                     </div>
                 </footer>
@@ -192,6 +127,19 @@
     </div>
 
     <partial name="_NotificationsToastr" />
+    <script src="~/AdminAssest/assets/vendors/js/vendor.bundle.base.js"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <script src="~/AdminAssest/assets/vendors/chart.js/Chart.min.js"></script>
+    <script src="~/AdminAssest/assets/vendors/jquery-circle-progress/js/circle-progress.min.js"></script>
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <script src="~/AdminAssest/assets/js/off-canvas.js"></script>
+    <script src="~/AdminAssest/assets/js/hoverable-collapse.js"></script>
+    <script src="~/AdminAssest/assets/js/misc.js"></script>
+    <!-- endinject -->
+    <!-- Custom js for this page -->
+    <script src="~/AdminAssest/assets/js/dashboard.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.js"></script>
 
 </body>

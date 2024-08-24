@@ -154,8 +154,16 @@
                                    
                                 </div>
                                 <textarea name="reviewText" placeholder="Your Review"></textarea>
-                                <button type="submit">Submit Now</button>
+                                @if (userId != null)
+                                {
+                                    <button type="submit">Submit Now</button>
+                                }
                             </div>
+                            else
+                            {
+                            <button type="submit" disabled>Submit Now</button>
+
+                            }
                         </div>
                     </form>
                 </div>

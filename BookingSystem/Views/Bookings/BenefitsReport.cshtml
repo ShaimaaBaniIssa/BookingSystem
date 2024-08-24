@@ -3,6 +3,8 @@
 @{
     Layout = null;
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var months = ViewBag.Months;
+    var years = ViewBag.Years;
 }
 
 <!DOCTYPE html>
@@ -22,22 +24,55 @@
 </head>
 <body>
     <div id="content">
-    <div class="row">
-        <div class="col-6">
-            <form action="Report" method="post">
-                <input type="date" class="form-control" name="startDate" placeholder="Start Date">
-                <input type="date" class="form-control" name="endDate" placeholder="End Date">
+        <h1 class="text-primary mb-4">Benefits Report</h1>
 
+        <div class="row mb-4">
+            <div class="col-4 ">
+                <form asp-action="BenefitsReport" method="post">
+                    <input type="date" class="form-control w-75" name="startDate" placeholder="Start Date">
+                    <input type="date" class="form-control w-75 w mt-2" name="endDate" placeholder="End Date">
+                    <button type="submit" class="btn btn-primary w-75 mt-2">Search</button>
 
+                </form>
+            </div>
+            <div class="col-4 ">
+                <form asp-action="BenefitsReport" method="post">
+                    <select class="form-control w-75" name="month">
+                        <option value="">Month</option>
+                        <option value="01">Jan</option>
+                        <option value="02">Feb</option>
+                        <option value="03">Mar</option>
+                        <option value="04">Apr</option>
+                        <option value="05">May</option>
+                        <option value="06">Jun</option>
+                        <option value="07">Jul</option>
+                        <option value="08">Aug</option>
+                        <option value="09">Sep</option>
+                        <option value="10">Oct</option>
+                        <option value="11">Nov</option>
+                        <option value="12">Dec</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary w-75 mt-2">Search by month</button>
 
-                <button type="submit" class="btn btn-dark">Search</button>
+                </form>
+            </div>
+            <div class="col-4 ">
+                <form asp-action="BenefitsReport" method="post">
+                    <select class="form-control w-75" name="year">
+                        <option value="2024">2024</option>
+                        <option value="2023">2023</option>
+                        <option value="2022">2022</option>
+                        <option value="2021">2021</option>
+                        <option value="2020">2020</option>
+                        <option value="2019">2010</option>
 
+                    </select>
+                    <button type="submit" class="btn btn-primary w-75 mt-2">Search by year</button>
 
-
-            </form>
+                </form>
+            </div>
         </div>
-    </div>
-    <table class="table table-striped table-borderless" id="searchTable">
+        <table class="table table-striped table-borderless mt-3" id="searchTable">
         <thead>
             <tr>
                 <th>Booking Id</th>
@@ -82,7 +117,26 @@
                         @Html.DisplayFor(modelItem => item.Numberofpersons)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Status)
+                            @if (item.Status.Equals(SD.BookingStatus_Pending))
+                            {
+                                <label class="badge badge-warning"> @Html.DisplayFor(modelItem => item.Status)</label>
+
+                            }
+                            @if (item.Status.Equals(SD.BookingStatus_Confirmed))
+                            {
+                                <label class="badge badge-success"> @Html.DisplayFor(modelItem => item.Status)</label>
+
+                            }
+                            @if (item.Status.Equals(SD.BookingStatus_Cancelled))
+                            {
+                                <label class="badge badge-danger"> @Html.DisplayFor(modelItem => item.Status)</label>
+
+                            }
+                            @if (item.Status.Equals(SD.BookingStatus_CheckedOut) || item.Status.Equals(SD.BookingStatus_CheckedIn))
+                            {
+                                <label class="badge badge-info"> @Html.DisplayFor(modelItem => item.Status)</label>
+
+                            }
 
                     </td>
                     <td>
@@ -120,23 +174,48 @@
         </tfoot>
     </table>
     </div>
+    <div class="row">
+        <div class="col-lg-6 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <canvas id="monthsChart" style="width:100%;max-width:600px"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <canvas id="yearsChart" style="width:100%;max-width:600px"></canvas>
 
-        <canvas id="myChart" style="width:100%;max-width:600px"></canvas>
+                </div>
+            </div>
+        </div>
+      
+    </div>
+       
+
 
     
    
     <button onclick="saveAsPDF();">save charts as pdf</button>
+    @* generate pdf for charts *@
     <script>
         
         function saveAsPDF() {
-            const canvas = document.getElementById("myChart");
-            const canvasImage = canvas.toDataURL('image/jpeg', 1.0);
-            console.log(canvasImage);
+            const canvas1 = document.getElementById("monthsChart");
+            const canvasImage1 = canvas1.toDataURL('image1/jpeg', 1.0);
+
+            const canvas2 = document.getElementById("yearsChart");
+            const canvasImage2 = canvas2.toDataURL('image2/jpeg', 1.0);
+
+
 
             let pdf = new jsPDF();
           
             pdf.setFontSize(20);
-            pdf.addImage(canvasImage,'JPEG',30,30,150,70);
+            pdf.addImage(canvasImage1,'JPEG',30,30,150,70);
+            pdf.addImage(canvasImage2, 'JPEG', 30, 120, 150, 70);
+
             pdf.text(15, 15, "Benefits chart");
             pdf.save('test.pdf');
 
@@ -144,13 +223,25 @@
     </script>
 
  
-
+    @* months chart *@
     <script>
-        var xValues = ["Italy", "France", "Spain", "USA", "Argentina"];
-        var yValues = [55, 49, 44, 24, 15, 0];
+        
+        var xValues = [];
+        var yValues = [];
         var barColors = ["red", "green", "blue", "orange", "brown"];
+       
+        @foreach (var d in months)
+        {
+            @:xValues.push(@d.month);
+            @:yValues.push(@d.count);
 
-        new Chart("myChart", {
+        }
+       
+        yValues.push(0);
+        console.log(xValues);
+        console.log(yValues);
+
+        new Chart("monthsChart", {
             type: "bar",
             data: {
                 labels: xValues,
@@ -163,12 +254,47 @@
                 legend: { display: false },
                 title: {
                     display: true,
-                    text: "World Wine Production 2018"
+                    text: "Months Report"
                 }
             }
         });
     </script>
-   
+
+    @* years chart *@
+    <script>
+
+        var xValues = [];
+        var yValues = [];
+        var barColors = ["orange", "green", "blue", "red", "brown"];
+
+        @foreach (var d in years)
+        {
+            @:xValues.push(@d.year);
+            @:yValues.push(@d.count);
+
+        }
+            yValues.push(0);
+        console.log(xValues);
+        console.log(yValues);
+
+        new Chart("yearsChart", {
+            type: "bar",
+            data: {
+                labels: xValues,
+                datasets: [{
+                    backgroundColor: barColors,
+                    data: yValues
+                }]
+            },
+            options: {
+                legend: { display: false },
+                title: {
+                    display: true,
+                    text: "Years Report"
+                }
+            }
+        });
+    </script>
 
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js" defer></script>

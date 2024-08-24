@@ -18,14 +18,18 @@ namespace BookingSystem.Controllers
         private readonly ModelContext _context;
         private readonly IPdfGenerator _pdfGenerator;
         private readonly IWebHostEnvironment _environment;
+        private readonly IEmailSender _emailSender;
 
 
 
-        public PaymentController(ModelContext context,IPdfGenerator pdfGenerator,IWebHostEnvironment environment)
+        public PaymentController(ModelContext context,IPdfGenerator pdfGenerator,
+            IWebHostEnvironment environment
+            ,IEmailSender emailSender)
         {
             _context = context;
             _pdfGenerator = pdfGenerator;
             _environment = environment;
+            _emailSender = emailSender;
            
         }
         public IActionResult Pay(decimal bookingId)
@@ -45,17 +49,17 @@ namespace BookingSystem.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Pay(Bankcard bankcard,decimal price,decimal bookingId)
+        public async Task<IActionResult> PayAsync(Bankcard bankcard,decimal price,decimal bookingId)
         {
         var card = _context.Bankcards.FirstOrDefault(u=>u.Cardnumber == bankcard.Cardnumber
         && u.Cardholdername == bankcard.Cardholdername
         && u.CardType == bankcard.CardType
         && u.Cvv == bankcard.Cvv
-        // note
-        //&& u.Expirydate == bankcard.Expirydate
+        
 
         );
-            if( card == null )
+            var isEqual = card.Expirydate.ToString("dd MMMM yyyy").Equals(bankcard.Expirydate.ToString("dd MMMM yyyy"));
+            if ( card == null || !isEqual)
             {
                 TempData["error"] = "wrong info";
                 return RedirectToAction("Index", new {bookingId});
@@ -78,7 +82,7 @@ namespace BookingSystem.Controllers
 
             Invoice invoice = new Invoice()
             {
-                CardNumber = $"**** **** **** {bankcard.Cardnumber.Substring(12,4)}", // note substring
+                CardNumber = $"**** **** **** {bankcard.Cardnumber.Substring(12,4)}",
                 CheckIn = booking.Checkin,
                 CheckOut = booking.Checkout,
                 CustomerName = $"{booking.Customer.Firstname} {booking.Customer.Lastname}",
@@ -88,25 +92,20 @@ namespace BookingSystem.Controllers
                 RoomId = booking.Room.Roomid,
             };
 
-            //var pdf = _pdfGenerator.GetInvoice(invoice).GeneratePdf(); //file name
+           // to save the pdf file in Pdf folder
+            //string fileName = $"invoice_{invoice.CustomerName.Trim()}_{Guid.NewGuid()}.pdf";
+            //string wwwrootPath = _environment.WebRootPath;
+            //string path = Path.Combine(wwwrootPath + "/Pdf/", fileName);
+            //_pdfGenerator.GetInvoice(invoice).GeneratePdf(path);
 
-            //return File(pdf,  "application/pdf", "hello-world.pdf");
-            //File(pdf, "application/pdf", "hello-world.pdf");
-            
-            string fileName = $"invoice_{invoice.CustomerName.Trim()}_{Guid.NewGuid().ToString()}.pdf";
-            string wwwrootPath = _environment.WebRootPath;
-            string path = Path.Combine(wwwrootPath + "/Pdf/", fileName);
-            _pdfGenerator.GetInvoice(invoice).GeneratePdf(path); //file name
+            // generate the pdf
+            var pdf = _pdfGenerator.GetInvoice(invoice).GeneratePdf();
+            // send it to the user
+            await _emailSender.SendEmail(booking.Customer.Email, "Booking Invoice",
+                $"Thank you for choosing {booking.Room.Hotel.Name} for your upcoming stay. We are delighted to have you as our guest and look forward to providing you with an exceptional experience.\n\nPlease find your booking invoice attached to this email for your reference.", 
+                pdf);
 
-            //string path = Path.Combine(Directory.GetCurrentDirectory()); //,file name
-
-            //.ShowInPreviewer();
-            //.GeneratePdfAndShow();
-            //.GeneratePdf("invoice.pdf");
-            // send 
-
-
-            // all booking 
+        
 
             return RedirectToAction("UserBookings","Home");
 

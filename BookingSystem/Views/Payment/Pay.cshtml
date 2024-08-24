@@ -86,13 +86,13 @@
             <div class="col-md-6">
               <label for="cc-number" class="form-label">Credit card number</label>
               <input asp-for="Cardnumber" type="text" class="form-control" id="cc-number" placeholder="" required="">
-                                <span asp-validation-for="Cardnumber" class="text-danger"></span>
+              <span asp-validation-for="Cardnumber" class="text-danger"></span>
 
             </div>
 
             <div class="col-md-3">
               <label for="cc-expiration" class="form-label">Expiration</label>
-              <input asp-for="Expirydate"  class="form-control" id="cc-expiration" placeholder="" required="">
+              <input asp-for="Expirydate"  class="form-control" placeholder="" required="">
               <div class="invalid-feedback">
                 Expiration date required
               </div>

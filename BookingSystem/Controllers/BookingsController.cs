@@ -27,24 +27,29 @@ namespace BookingSystem.Controllers
         }
         public async Task<IActionResult> BenefitsReport()
         {
+            
             var modelContext = _context.Bookings.Include(b => b.Customer).Include(b => b.Room);
             ViewBag.Benefit = modelContext.Sum(u => u.Totalprice);
+
+            Charts();
+
 
             return View(await modelContext.ToListAsync());
         }
         [HttpPost]
-        public async Task<IActionResult> BenefitsReport(DateTime? startDate, DateTime? endDate)
+        public async Task<IActionResult> BenefitsReport(DateTime? startDate, DateTime? endDate,string? month,string? year)
         {
             var modelContext = _context.Bookings.Include(b => b.Customer).Include(b => b.Room);
 
+            //if (startDate == null && endDate == null)
+            //{ 
+            //    ViewBag.Benefit = modelContext.Sum(u => u.Totalprice);
+            //    return View(modelContext); }
+
+            Charts();
 
 
-            if (startDate == null && endDate == null)
-            { 
-                ViewBag.Benefit = modelContext.Sum(u => u.Totalprice);
-                return View(modelContext); }
-
-            else if (startDate != null && endDate == null)
+            if (startDate != null && endDate == null)
             {
                 var result = await modelContext.Where(x => x.Checkin.Value.Date >= startDate).ToListAsync();
                 ViewBag.Benefit = result.Sum(u => u.Totalprice);
@@ -57,7 +62,7 @@ namespace BookingSystem.Controllers
 
                 return View(result);
             }
-            else
+            else if(startDate != null && endDate != null)
             {
                 var result = await modelContext
                     .Where(x => x.Checkout.Value.Date <= endDate && x.Checkin.Value.Date >= startDate)
@@ -66,8 +71,52 @@ namespace BookingSystem.Controllers
 
                 return View(result);
             }
+            else if (month != null)
+            {
+                var result = await modelContext
+                   .Where(x =>  x.Checkin.Value.Month == Convert.ToInt32(month))
+                   .ToListAsync();
+                ViewBag.Benefit = result.Sum(u => u.Totalprice);
+
+                return View(result);
+            }
+            else if (year != null)
+            {
+                var result = await modelContext
+                   .Where(x => x.Checkin.Value.Year == Convert.ToInt32(year))
+                   .ToListAsync();
+                ViewBag.Benefit = result.Sum(u => u.Totalprice);
+
+                return View(result);
+            }
+            return View(modelContext);
+
+        }
+        public void Charts()
+        {
+            // months chart
+            var months = _context.Bookings
+                .OrderByDescending(u => u.Checkin.Value.Month)
+                .GroupBy(u => u.Checkin.Value.Month)
+                .Select(grp => new
+                {
+                    month = grp.First().Checkin.Value.Month.ToString(),
+                    count = grp.Count()
+                }).ToArray();
+
+            // years chart
+            var years = _context.Bookings
+                .OrderByDescending(u => u.Checkin.Value.Year)
+                .GroupBy(u => u.Checkin.Value.Year)
+                .Select(grp => new
+                {
+                    year = grp.First().Checkin.Value.Year.ToString(),
+                    count = grp.Count()
+                }).ToArray();
 
 
+            ViewBag.Months = months;
+            ViewBag.Years = years;
         }
         [HttpPost]
         public async Task<IActionResult> Search(DateTime? startDate, DateTime? endDate)
@@ -107,6 +156,20 @@ namespace BookingSystem.Controllers
             room.BookedTo = null;
 
             booking.Status = SD.BookingStatus_CheckedOut;
+            _context.Bookings.Update(booking);
+            _context.Rooms.Update(room);
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(Search));
+        }
+        public IActionResult CancelBook(decimal bookingId)
+        {
+            var booking = _context.Bookings.SingleOrDefault(u => u.Bookingid == bookingId);
+            var room = _context.Rooms.SingleOrDefault(u => u.Roomid == booking.Roomid);
+            room.BookedFrom = null;
+            room.BookedTo = null;
+
+            booking.Status = SD.BookingStatus_Cancelled;
             _context.Bookings.Update(booking);
             _context.Rooms.Update(room);
             _context.SaveChanges();

@@ -8,7 +8,6 @@ public partial class Bankcard
 {
     public decimal Id { get; set; }
 
-    // note 16
     [StringLength(16)]
     public string Cardnumber { get; set; } = null!;
     [StringLength(3)]

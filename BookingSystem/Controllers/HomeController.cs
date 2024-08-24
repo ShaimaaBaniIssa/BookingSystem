@@ -1,4 +1,5 @@
 ﻿using BookingSystem.Models;
+using BookingSystem.Services;
 using BookingSystem.Utility;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -11,15 +12,18 @@ namespace BookingSystem.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ModelContext _context;
+        private readonly IEmailSender _emailSender;
 
 
-        public HomeController(ILogger<HomeController> logger, ModelContext context)
+
+        public HomeController(ILogger<HomeController> logger, ModelContext context,IEmailSender emailSender)
         {
             _logger = logger;
             _context = context;
+            _emailSender = emailSender;
         }
 
-        public IActionResult Index(string? hotelId,string? pageNumber = "1")
+        public async Task<IActionResult> IndexAsync(string? hotelId,string? pageNumber = "1")
         {
          
 
@@ -42,6 +46,7 @@ namespace BookingSystem.Controllers
 
             var tuple = Tuple.Create<IEnumerable<Hotel>, IEnumerable<Testimonial>,Homedatum>(hotels, testimonials,homeData);
 
+           
 
             return View(tuple);
         }
@@ -98,12 +103,9 @@ namespace BookingSystem.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditProfile(decimal id, [Bind("Customerid,Firstname,Lastname,Email,Phonenumber")] Customer customer)
+        public async Task<IActionResult> EditProfile( [Bind("Customerid,Firstname,Lastname,Email,Phonenumber")] Customer customer)
         {
-            if (id != customer.Customerid)
-            {
-                return NotFound();
-            }
+          
 
             if (ModelState.IsValid)
             {
@@ -215,7 +217,7 @@ namespace BookingSystem.Controllers
         }
         public IActionResult CancelBook(decimal id)
         {
-            var booking = _context.Bookings.SingleOrDefault(u=>u.Bookingid == id);
+            var booking = _context.Bookings.SingleOrDefault(u => u.Bookingid == id);
             var room = _context.Rooms.SingleOrDefault(u => u.Roomid == booking.Roomid);
             room.BookedFrom = null;
             room.BookedTo = null;

@@ -28,7 +28,9 @@ namespace BookingSystem.Controllers
             ViewBag.RoleId = roleId;
 
             ViewBag.NumOfRegisteredUsers = _context.UserLogins.Count();
+            ViewBag.NumOfHotels = _context.Hotels.Count();
 
+            ViewBag.NewTestimonials = _context.Testimonials.Where(u => u.Status.Equals(SD.Testimonial_Pending)).Count();
             List<HotelRooms> availableRooms = _context.Rooms.Where(u=>u.BookedFrom==null && u.BookedTo==null).Include(r=>r.Hotel)
                 .GroupBy(u => u.Hotelid).Select(grp => new HotelRooms() { HotelName =grp.First().Hotel.Name , NumOfRooms = grp.Count()}).ToList();
 

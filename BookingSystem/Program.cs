@@ -20,12 +20,14 @@ namespace BookingSystem
             });
             builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 
-
+            builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
             builder.Services.AddSession(options => {
                 options.IdleTimeout = TimeSpan.FromMinutes(60);
             });
             builder.Services.AddScoped<IPdfGenerator, PdfGenerator>();
             builder.Services.AddRazorPages();
+            builder.Services.AddTransient<IEmailSender, EmailSender>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
