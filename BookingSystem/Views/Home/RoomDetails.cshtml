@@ -129,7 +129,7 @@
                     
                     </div>
                 }
-                @* only if login note *@
+                
                 <div class="review-add" >
                     <h4>Add Review</h4>
                     <form asp-action="AddTestimony" class="ra-form">
@@ -154,16 +154,11 @@
                                    
                                 </div>
                                 <textarea name="reviewText" placeholder="Your Review"></textarea>
-                                @if (userId != null)
-                                {
                                     <button type="submit">Submit Now</button>
-                                }
+                                
                             </div>
-                            else
-                            {
-                            <button type="submit" disabled>Submit Now</button>
-
-                            }
+                           
+                            
                         </div>
                     </form>
                 </div>

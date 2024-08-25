@@ -2,15 +2,19 @@
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
-
+using Microsoft.AspNetCore.Mvc;
 namespace BookingSystem.Services
 {
     public class PdfGenerator : IPdfGenerator
     {
-       
-            public IDocument GetInvoice(Invoice invoice)
+           
+  
+
+        public IDocument GetInvoice(Invoice invoice)
             {
-                QuestPDF.Settings.License = LicenseType.Community;
+
+            
+            QuestPDF.Settings.License = LicenseType.Community;
                 return Document.Create(container =>
                 {
                     container
@@ -29,7 +33,7 @@ namespace BookingSystem.Services
                          });
 
 
-                         row.ConstantItem(100).Height(50).AlignRight().AlignMiddle().Image("C:\\Users\\shaym\\source\\repos\\BookingSystem\\BookingSystem\\wwwroot\\Images\\Project\\Home\\a0264c81-f804-45f0-b043-fb9f8d63dae9_logo.png", ImageScaling.FitArea);
+                         row.ConstantItem(100).Height(50).AlignRight().AlignMiddle().Image("e9_logo.png", ImageScaling.FitArea);
                      });
 
                      page.Content().Column(column =>

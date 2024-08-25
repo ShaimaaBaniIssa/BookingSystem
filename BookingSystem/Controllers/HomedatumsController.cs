@@ -39,7 +39,7 @@ namespace BookingSystem.Controllers
             }
 
             var homedatum = await _context.Homedata
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.HomeId == id);
             if (homedatum == null)
             {
                 return NotFound();
@@ -59,7 +59,7 @@ namespace BookingSystem.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Logo,Title,Description,ImageFile1,ImageFile2,ImageFile3")] Homedatum homedatum)
+        public async Task<IActionResult> Create([Bind("HomeId,Logo,Title,Description,DarkLogo,ImageFile1,ImageFile2,ImageFile3")] Homedatum homedatum)
         {
             if (ModelState.IsValid)
             {
@@ -120,6 +120,20 @@ namespace BookingSystem.Controllers
                     homedatum.Imgpath3 = fileName;
 
                 }
+                if (homedatum.DarkLogo != null)
+                {
+
+                    string fileName = Guid.NewGuid().ToString() + "_" + homedatum.DarkLogo.FileName;
+
+                    string path = Path.Combine(wwwrootPath + "/Images/Project/Home/", fileName);
+
+                    using (var fileStream = new FileStream(path, FileMode.Create))
+                    {
+                        await homedatum.DarkLogo.CopyToAsync(fileStream);
+                    }
+                    homedatum.DarkLogopath = fileName;
+
+                }
                 _context.Add(homedatum);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -148,12 +162,9 @@ namespace BookingSystem.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(decimal id, [Bind("Id,Logopath,Title,Description,Imgpath1,Imgpath2,Imgpath3,ImageFile1,ImageFile2,ImageFile3,Logo")] Homedatum homedatum)
+        public async Task<IActionResult> Edit([Bind("HomeId,Logopath,Title,Description,Imgpath1,Imgpath2,Imgpath3,ImageFile1,ImageFile2,ImageFile3,Logo,DarkLogo,DarkLogopath")] Homedatum homedatum)
         {
-            if (id != homedatum.Id)
-            {
-                return NotFound();
-            }
+           
 
             if (ModelState.IsValid)
             {
@@ -273,6 +284,36 @@ namespace BookingSystem.Controllers
                     homedatum.Logopath = fileName;
 
                 }
+                if (homedatum.DarkLogo != null)
+                {
+                    string wwwrootPath = _environment.WebRootPath;
+                    // delete the old image
+                    if (homedatum.DarkLogopath != null)
+                    {
+                        string oldImage = Path.Combine(wwwrootPath + "/Images/Project/Home/", homedatum.DarkLogopath);
+
+                        if (System.IO.File.Exists(oldImage))
+                        {
+                            System.IO.File.Delete(oldImage);
+                        }
+                    }
+
+                    // file name
+                    string fileName = Guid.NewGuid().ToString() + "_" + homedatum.DarkLogo.FileName;
+
+                    // create path
+                    // ~/Images/.....
+                    string path = Path.Combine(wwwrootPath + "/Images/Project/Home/", fileName);
+
+                    // add the image to Images folder
+                    using (var fileStream = new FileStream(path, FileMode.Create))
+                    {
+                        await homedatum.DarkLogo.CopyToAsync(fileStream);
+                    }
+                    homedatum.DarkLogopath = fileName;
+
+                }
+
                 try
                 {
                     _context.Update(homedatum);
@@ -280,7 +321,7 @@ namespace BookingSystem.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!HomedatumExists(homedatum.Id))
+                    if (!HomedatumExists(homedatum.HomeId))
                     {
                         return NotFound();
                     }
@@ -303,7 +344,7 @@ namespace BookingSystem.Controllers
             }
 
             var homedatum = await _context.Homedata
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.HomeId == id);
             if (homedatum == null)
             {
                 return NotFound();
@@ -333,7 +374,7 @@ namespace BookingSystem.Controllers
 
         private bool HomedatumExists(decimal id)
         {
-          return (_context.Homedata?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.Homedata?.Any(e => e.HomeId == id)).GetValueOrDefault();
         }
     }
 }

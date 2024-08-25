@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using WebApplication1.Models;
+using BookingSystem.Models;
 
 namespace BookingSystem.Models;
 
-public partial class ModelContext :DbContext
+public partial class ModelContext : DbContext
 {
     public ModelContext()
     {
@@ -190,7 +190,7 @@ public partial class ModelContext :DbContext
                 .ValueGeneratedOnAdd()
                 .HasColumnType("NUMBER(38)")
                 .HasColumnName("ROOMID");
-           
+
             entity.Property(e => e.Description)
                 .HasMaxLength(200)
                 .IsUnicode(false)
@@ -205,7 +205,7 @@ public partial class ModelContext :DbContext
             entity.Property(e => e.Maxcapacity)
                 .HasColumnType("NUMBER(38)")
                 .HasColumnName("MAXCAPACITY");
-            
+
             entity.Property(e => e.Price)
                 .HasColumnType("NUMBER")
                 .HasColumnName("PRICE");
@@ -333,6 +333,30 @@ public partial class ModelContext :DbContext
                 .HasMaxLength(25)
                 .IsUnicode(false)
                 .HasColumnName("TITLE");
+            entity.Property(e => e.ImgTitle1)
+                .HasMaxLength(35)
+                .IsUnicode(false)
+                .HasColumnName("IMGTITLE1");
+            entity.Property(e => e.ImgTitle2)
+               .HasMaxLength(35)
+               .IsUnicode(false)
+               .HasColumnName("IMGTITLE2");
+            entity.Property(e => e.ImgTitle3)
+               .HasMaxLength(35)
+               .IsUnicode(false)
+               .HasColumnName("IMGTITLE3");
+            entity.Property(e => e.ImgTitle4)
+               .HasMaxLength(35)
+               .IsUnicode(false)
+               .HasColumnName("IMGTITLE4");
+            entity.Property(e => e.HomeId)
+                .ValueGeneratedOnAdd()
+                .HasColumnType("NUMBER(38)")
+                .HasColumnName("HOMEID");
+            entity.HasOne(d => d.Homedatum).WithMany(p => p.Aboutusdata)
+                .HasForeignKey(d => d.HomeId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("ABOUTUSDATA_FK1");
         });
 
         modelBuilder.Entity<Contactusdatum>(entity =>
@@ -350,7 +374,7 @@ public partial class ModelContext :DbContext
                 .IsUnicode(false)
                 .HasColumnName("ADDRESS");
             entity.Property(e => e.Description)
-                .HasMaxLength(100)
+                .HasMaxLength(200)
                 .IsUnicode(false)
                 .HasColumnName("DESCRIPTION");
             entity.Property(e => e.Email)
@@ -365,15 +389,23 @@ public partial class ModelContext :DbContext
                 .HasMaxLength(15)
                 .IsUnicode(false)
                 .HasColumnName("PHONENUMBER");
+            entity.Property(e => e.HomeId)
+                .ValueGeneratedOnAdd()
+                .HasColumnType("NUMBER(38)")
+                .HasColumnName("HOMEID");
+            entity.HasOne(d => d.Homedatum).WithMany(p => p.Contactusdata)
+                .HasForeignKey(d => d.HomeId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("CONTACTUSDATA_FK1");
         });
 
         modelBuilder.Entity<Homedatum>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("SYS_C008629");
+            entity.HasKey(e => e.HomeId).HasName("SYS_C008629");
 
             entity.ToTable("HOMEDATA");
 
-            entity.Property(e => e.Id)
+            entity.Property(e => e.HomeId)
                 .ValueGeneratedOnAdd()
                 .HasColumnType("NUMBER(38)")
                 .HasColumnName("ID");
@@ -401,6 +433,10 @@ public partial class ModelContext :DbContext
                 .HasMaxLength(25)
                 .IsUnicode(false)
                 .HasColumnName("TITLE");
+            entity.Property(e => e.DarkLogopath)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("DARKLOGOPATH");
         });
         modelBuilder.Entity<Bankcard>(entity =>
         {
@@ -435,6 +471,32 @@ public partial class ModelContext :DbContext
                .IsUnicode(false)
                .HasColumnName("CARDTYPE");
         });
+        modelBuilder.Entity<Review>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("SYS_C008720");
+
+            entity.ToTable("REVIEWS");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedOnAdd()
+                .HasColumnType("NUMBER(38)")
+                .HasColumnName("ID");
+            entity.Property(e => e.Rdate)
+                .HasColumnType("DATE")
+                .HasColumnName("RDATE");
+            entity.Property(e => e.Rtext)
+                .HasMaxLength(200)
+                .IsUnicode(false)
+                .HasColumnName("RTEXT");
+            entity.Property(e => e.Useremail)
+                .HasMaxLength(40)
+                .IsUnicode(false)
+                .HasColumnName("USEREMAIL");
+            entity.Property(e => e.Username)
+                .HasMaxLength(40)
+                .IsUnicode(false)
+                .HasColumnName("USERNAME");
+        });
         modelBuilder.HasSequence("S_ROLL_SEQ");
         modelBuilder.HasSequence("S_ROLL_SEQ2");
         modelBuilder.HasSequence("S_ROLL_SEQ3");
@@ -445,4 +507,6 @@ public partial class ModelContext :DbContext
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+    public DbSet<BookingSystem.Models.Review>? Review { get; set; }
 }

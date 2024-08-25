@@ -9,7 +9,7 @@ using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 using QuestPDF.Previewer;
-using WebApplication1.Models;
+
 
 namespace BookingSystem.Controllers
 {
@@ -80,6 +80,11 @@ namespace BookingSystem.Controllers
             _context.Bookings.Update(booking);
             _context.SaveChanges();
 
+            // get logo path
+            string wwwrootPath = _environment.WebRootPath;
+            string fileName = HttpContext.Session.GetString("LogoPath");
+            string path = Path.Combine(wwwrootPath + "/Images/Project/Home/", fileName);
+
             Invoice invoice = new Invoice()
             {
                 CardNumber = $"**** **** **** {bankcard.Cardnumber.Substring(12,4)}",
@@ -90,9 +95,10 @@ namespace BookingSystem.Controllers
                 RoomType = booking.Room.Roomtype,
                 TotalPrice = booking.Totalprice,
                 RoomId = booking.Room.Roomid,
+                LogoPath = path,
             };
 
-           // to save the pdf file in Pdf folder
+            // to save the pdf file in Pdf folder
             //string fileName = $"invoice_{invoice.CustomerName.Trim()}_{Guid.NewGuid()}.pdf";
             //string wwwrootPath = _environment.WebRootPath;
             //string path = Path.Combine(wwwrootPath + "/Pdf/", fileName);
@@ -106,7 +112,7 @@ namespace BookingSystem.Controllers
                 pdf);
 
         
-
+            // all user bookings
             return RedirectToAction("UserBookings","Home");
 
         }

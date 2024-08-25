@@ -1,0 +1,57 @@
+﻿@model Review
+
+@{
+    ViewData["Title"] = "ContactUs";
+    Layout = "~/Views/Shared/_HomeLayout.cshtml";
+}
+<section class="contact-section spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="contact-text">
+                    <h2>Contact Info</h2>
+                    <p>
+                        @ViewBag.ContactUs.Description
+                    </p>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td class="c-o">Address:</td>
+                                <td> @ViewBag.ContactUs.Address</td>
+                            </tr>
+                            <tr>
+                                <td class="c-o">Phone:</td>
+                                <td> @ViewBag.ContactUs.Phonenumber</td>
+                            </tr>
+                            <tr>
+                                <td class="c-o">Email:</td>
+                                <td> @ViewBag.ContactUs.Email</td>
+                            </tr>
+                           
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-lg-7 offset-lg-1">
+                <form asp-action="AddReview" class="contact-form">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <input asp-for="Username" placeholder="Your Name">
+                        </div>
+                        <div class="col-lg-6">
+                            <input asp-for="Useremail" placeholder="Your Email">
+                        </div>
+                        <div class="col-lg-12">
+                            <textarea asp-for=Rtext placeholder="Your Message"></textarea>
+                            <button type="submit">Submit Now</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="map">
+            <iframe src="@ViewBag.ContactUs.Locationurl" height="470" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+        </div>
+    </div>
+</section>

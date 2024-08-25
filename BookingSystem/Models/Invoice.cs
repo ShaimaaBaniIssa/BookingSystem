@@ -13,6 +13,7 @@
 
         public DateTime? CheckOut { get; set; }
         public string CardNumber { get; set; }
+        public string LogoPath { get; set; }
 
     }
 }

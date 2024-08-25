@@ -1,4 +1,4 @@
-﻿@model BookingSystem.Models.Homedatum
+﻿@model BookingSystem.Models.Aboutusdatum
 
 @{
     ViewData["Title"] = "Edit";
@@ -7,30 +7,19 @@
 
 <h1>Edit</h1>
 
-<h4>Homedatum</h4>
+<h4>Aboutusdatum</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="HomeId" />
-            <input type="hidden" asp-for="Logopath" />
+            <input type="hidden" asp-for="Id" />
             <input type="hidden" asp-for="Imgpath1" />
             <input type="hidden" asp-for="Imgpath2" />
             <input type="hidden" asp-for="Imgpath3" />
-            <input type="hidden" asp-for="DarkLogopath" />
+            <input type="hidden" asp-for="Imgpath4" />
 
 
-            <div class="form-group">
-                <label asp-for="Logo" class="control-label"></label>
-                <input asp-for="Logo" class="form-control" />
-                <span asp-validation-for="Logo" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DarkLogo" class="control-label"></label>
-                <input asp-for="DarkLogo" class="form-control" />
-                <span asp-validation-for="DarkLogo" class="text-danger"></span>
-            </div>
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
                 <input asp-for="Title" class="form-control" />
@@ -55,6 +44,31 @@
                 <label asp-for="ImageFile3" class="control-label"></label>
                 <input asp-for="ImageFile3" class="form-control" />
                 <span asp-validation-for="ImageFile3" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ImageFile4" class="control-label"></label>
+                <input asp-for="ImageFile4" class="form-control" />
+                <span asp-validation-for="ImageFile4" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ImgTitle1" class="control-label"></label>
+                <input asp-for="ImgTitle1" class="form-control" />
+                <span asp-validation-for="ImgTitle1" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ImgTitle2" class="control-label"></label>
+                <input asp-for="ImgTitle2" class="form-control" />
+                <span asp-validation-for="ImgTitle2" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ImgTitle3" class="control-label"></label>
+                <input asp-for="ImgTitle3" class="form-control" />
+                <span asp-validation-for="ImgTitle3" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ImgTitle4" class="control-label"></label>
+                <input asp-for="ImgTitle4" class="form-control" />
+                <span asp-validation-for="ImgTitle4" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

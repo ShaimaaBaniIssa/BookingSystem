@@ -52,44 +52,46 @@ namespace BookingSystem.Controllers
         [HttpPost]
         public async Task<IActionResult> Login([Bind("Username,Hashedpassword")] UserLogin userlogin)
         {
-            
-                var user = _context.UserLogins
-                    .Include(u => u.Customer)
-                .SingleOrDefault(m => m.Username == userlogin.Username);
 
-                var result = _passwordHasher.Verify(user.Hashedpassword, userlogin.Hashedpassword);
-                if (result)
-                {
+            var user = _context.UserLogins
+                .Include(u => u.Customer)
+            .SingleOrDefault(m => m.Username == userlogin.Username);
+            if (user == null)
+            {
+                TempData["error"] = "Invalid username";
+                return View(userlogin);
 
-                    if (user != null)
+            }
+            // check if the input password equal the hashed password in DB
+            var result = _passwordHasher.Verify(user.Hashedpassword, userlogin.Hashedpassword);
+            if (result)
+            {
+                    // normal user
+                    if (user.Roleid == 1)
                     {
-
-                        if (user.Roleid == 1)
-                        {
-                            //set session
-                            HttpContext.Session.SetString("Name", user.Customer.Firstname);
+                        //set session
+                        HttpContext.Session.SetString("Name", user.Customer.Firstname);
                         HttpContext.Session.SetInt32("Id", (int)user.Customerid);
 
                         HttpContext.Session.SetInt32("RoleId", (int)user.Roleid);
-                            return RedirectToAction("Index", "Home");
-                        }
-                        else if (user.Roleid == 2)
-                        {
-                            HttpContext.Session.SetInt32("RoleId", (int)user.Roleid);
+                        return RedirectToAction("Index", "Home");
+                    }
+                    // admin
+                    else if (user.Roleid == 2)
+                    {
+                        HttpContext.Session.SetInt32("RoleId", (int)user.Roleid);
                         HttpContext.Session.SetInt32("Id", (int)user.Id);
 
                         HttpContext.Session.SetString("Name", user.Customer.Firstname);
 
-                            return RedirectToAction("Index", "Admin");
-                        }
-
+                        return RedirectToAction("Index", "Admin");
                     }
-                }
+
+            }
             TempData["error"] = "Invalid username or password";
 
             return View(userlogin);
 
-            
         }
         public IActionResult Logout()
         {

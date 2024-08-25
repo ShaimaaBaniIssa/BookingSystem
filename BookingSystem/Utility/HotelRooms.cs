@@ -1,4 +1,4 @@
-﻿namespace BookingSystem.Models
+﻿namespace BookingSystem.Utility
 {
     public class HotelRooms
     {

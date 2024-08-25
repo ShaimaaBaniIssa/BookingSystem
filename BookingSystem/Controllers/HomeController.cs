@@ -16,61 +16,110 @@ namespace BookingSystem.Controllers
 
 
 
-        public HomeController(ILogger<HomeController> logger, ModelContext context,IEmailSender emailSender)
+        public HomeController(ILogger<HomeController> logger, ModelContext context, IEmailSender emailSender)
         {
             _logger = logger;
             _context = context;
             _emailSender = emailSender;
         }
 
-        public async Task<IActionResult> IndexAsync(string? hotelId,string? pageNumber = "1")
+        public async Task<IActionResult> IndexAsync(string? hotelId, string? pageNumber = "1")
         {
-         
 
+            // view home page data
+            var homeData = _context.Homedata.SingleOrDefault(u => u.Title == "Floria - Hotels Booking");
+
+            // add logo path to the seeion to show it on all pages (home layout)
+            HttpContext.Session.SetString("LogoPath", homeData.Logopath);
+            HttpContext.Session.SetString("DarkLogoPath", homeData.DarkLogopath);
+
+            // to add contact info to the session
+            var contactUs = _context.Contactusdata.SingleOrDefault(u => u.HomeId == homeData.HomeId);
+            HttpContext.Session.SetString("Email", contactUs.Email);
+            HttpContext.Session.SetString("PhoneNumber", contactUs.Phonenumber);
+            HttpContext.Session.SetString("Address", contactUs.Address);
+
+            // about us section
+            var aboutUs = _context.Aboutusdata.FirstOrDefault(u => u.HomeId == homeData.HomeId);
+            ViewBag.AboutUs = aboutUs;
+
+            // for the drop down list
             ViewData["HotelNames"] = new SelectList(_context.Hotels, "Hotelid", "Name");
-            //ViewData["RoomsType"] = new SelectList(new List<string>
-            //{ SD.RoomType_Deluxe,
-            //SD.RoomType_Premium,
-            //SD.RoomType_Luxury,
-            //SD.RoomType_Double,
-            //SD.RoomType_Family,
-            //SD.RoomType_Single}
-            //);
-            
             ViewData["RoomsType"] = new SelectList(_context.Rooms.Where(u => u.Hotelid == Convert.ToInt32(hotelId)), "Roomid", "Roomtype");
 
-            var hotels = _context.Hotels.AsNoTracking().Skip((Convert.ToInt32(pageNumber)-1)*3).Take(3).ToList();
+            // for pagination
+            var hotels = _context.Hotels.AsNoTracking().Skip((Convert.ToInt32(pageNumber) - 1) * 3).Take(3).ToList();
+
+            // view all testimonials
             var testimonials = _context.Testimonials.Include(u => u.Customer).Include(u => u.Room).ThenInclude(u => u.Hotel).ToList();
-            var homeData = _context.Homedata.SingleOrDefault(u=>u.Title== "Floria - Hotels Booking");
-            HttpContext.Session.SetString( "LogoPath",homeData.Logopath);
 
-            var tuple = Tuple.Create<IEnumerable<Hotel>, IEnumerable<Testimonial>,Homedatum>(hotels, testimonials,homeData);
-
-           
-
+            var tuple = Tuple.Create<IEnumerable<Hotel>, IEnumerable<Testimonial>, Homedatum>(hotels, testimonials, homeData);
+            
             return View(tuple);
         }
-        
-        public async Task<IActionResult> Hotels(string? hotelName ,string? pageNumber = "1")
-        {
 
+        public async Task<IActionResult> Hotels(string? hotelName, string? pageNumber = "1")
+        {
+            // if hotel name not null --> seach by hotel name
             if (hotelName != null)
             {
                 var result = _context.Hotels.AsNoTracking().ToList()
-                    .Where(u => u.Name.Contains(hotelName, StringComparison.OrdinalIgnoreCase));
-                  
+                    .Where(u => u.Name.Contains(hotelName, StringComparison.OrdinalIgnoreCase)); // ignore case
                 return View(result);
 
             }
+            // for pagination
             var hotels = _context.Hotels.AsNoTracking().Skip((Convert.ToInt32(pageNumber) - 1) * 3).Take(3).ToList();
 
             return View(hotels);
         }
-       
+
+        public IActionResult AboutUs()
+        {
+            var homeId = _context.Homedata.SingleOrDefault(u => u.Title == "Floria - Hotels Booking").HomeId;
+
+            var aboutUs = _context.Aboutusdata.SingleOrDefault(u => u.HomeId == homeId);
+            var rooms = _context.Rooms.Take(4).ToArray();
+            ViewBag.Rooms = rooms;
+            return View(aboutUs);
+        }
+        public IActionResult ContactUs()
+        {
+            var homeId = _context.Homedata.SingleOrDefault(u => u.Title == "Floria - Hotels Booking").HomeId;
+
+            var contactUs = _context.Contactusdata.SingleOrDefault(u => u.HomeId == homeId);
+            ViewBag.ContactUs = contactUs;
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddReview([Bind("Id,Rtext,Username,Useremail")] Review review)
+        {
+            // if the user is not logged in --> guest user
+            if (HttpContext.Session.GetInt32("Id") == null)
+            {
+                TempData["warning"] = "Please Login First";
+                return RedirectToAction(nameof(ContactUs));
+
+            }
+            if (ModelState.IsValid)
+            {
+
+                review.Rdate = DateTime.Now;
+                _context.Add(review);
+                await _context.SaveChangesAsync();
+                TempData["success"] = "Your Message sent successfully";
+                return RedirectToAction(nameof(ContactUs));
+            }
+            TempData["warning"] = "Please fill all required data";
+
+            return RedirectToAction(nameof(ContactUs));
+
+        }
+
         public async Task<IActionResult> Rooms(decimal hotelId)
         {
+            // get the rooms for specific hotel
             var modelContext = _context.Rooms.Where(u => u.Hotelid == hotelId).ToList();
-            //var result = modelContext.DistinctBy(u => u.Roomtype);
             return View(modelContext);
         }
         public IActionResult RoomDetails(decimal roomId)
@@ -80,6 +129,7 @@ namespace BookingSystem.Controllers
             ViewBag.UserName = userName;
             ViewBag.RoleId = roleId;
 
+            // retrun the testimonials for this room
             var testimonials = _context.Testimonials.Include(u => u.Customer).Where(u => u.Roomid == roomId
             && u.Status == SD.Testimonial_Approved).ToList();
             ViewBag.Testimonials = testimonials;
@@ -88,13 +138,13 @@ namespace BookingSystem.Controllers
             return View(room);
 
         }
-        public async Task <IActionResult> Profile()
+        public async Task<IActionResult> Profile()
         {
             var customerId = HttpContext.Session.GetInt32("Id");
-            var customer = await _context.Customers.SingleOrDefaultAsync(u=>u.Customerid== customerId);
+            var customer = await _context.Customers.SingleOrDefaultAsync(u => u.Customerid == customerId);
             return View(customer);
         }
-        public async Task <IActionResult> EditProfile()
+        public async Task<IActionResult> EditProfile()
         {
             var customerId = HttpContext.Session.GetInt32("Id");
             var customer = await _context.Customers.SingleOrDefaultAsync(u => u.Customerid == customerId);
@@ -103,9 +153,8 @@ namespace BookingSystem.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditProfile( [Bind("Customerid,Firstname,Lastname,Email,Phonenumber")] Customer customer)
+        public async Task<IActionResult> EditProfile([Bind("Customerid,Firstname,Lastname,Email,Phonenumber")] Customer customer)
         {
-          
 
             if (ModelState.IsValid)
             {
@@ -124,13 +173,24 @@ namespace BookingSystem.Controllers
         }
         public async Task<IActionResult> UserBookings()
         {
+            // return all user bookings
             var customerId = HttpContext.Session.GetInt32("Id");
-            var bookings = await _context.Bookings.Include(u=>u.Room).ThenInclude(u=>u.Hotel).Where(u=>u.Customerid== customerId).ToListAsync();
+            var bookings = await _context.Bookings.Include(u => u.Room).ThenInclude(u => u.Hotel).Where(u => u.Customerid == customerId).ToListAsync();
 
             return View(bookings);
         }
-        public ActionResult AddTestimony(string reviewText, decimal roomId,string rating)
+        public ActionResult AddTestimony(string reviewText, decimal roomId, string rating)
         {
+            // check if the user is logged in or no
+            if (HttpContext.Session.GetInt32("Id") == null)
+            {
+                TempData["warning"] = "Please Login First";
+                return RedirectToAction(nameof(RoomDetails), new
+                {
+                    roomId
+                });
+
+            }
             Testimonial testimonial = new Testimonial()
             {
                 Customerid = HttpContext.Session.GetInt32("Id"),
@@ -157,10 +217,9 @@ namespace BookingSystem.Controllers
 
                 roomData = _context.Rooms.SingleOrDefault(
                     r => r.Roomid == Convert.ToInt32(roomId)
-            //&& r.Maxcapacity >= Convert.ToInt32(numOfPersons)
             );
 
-
+                // check all possible cases for room availability
                 if (roomData == null)
                 {
                     TempData["warning"] = "Room is not found";
@@ -179,6 +238,7 @@ namespace BookingSystem.Controllers
                     return RedirectToAction("Index");
 
                 }
+                // calculate the days
                 int days = (checkOut.Date - checkIn.Date).Days;
                 Booking booking = new Booking()
                 {
@@ -190,7 +250,7 @@ namespace BookingSystem.Controllers
                     Totalprice = roomData.Price * days,
                     Status = SD.BookingStatus_Pending
                 };
-
+                // change the room dates availability
                 roomData.BookedFrom = checkIn;
                 roomData.BookedTo = checkOut;
 
@@ -198,7 +258,8 @@ namespace BookingSystem.Controllers
                 _context.Bookings.Add(booking);
                 _context.SaveChanges();
 
-                if (pay)
+                // want to pay later
+                if (!pay)
                 {
                     return RedirectToAction(nameof(UserBookings));
 
@@ -217,12 +278,22 @@ namespace BookingSystem.Controllers
         }
         public IActionResult CancelBook(decimal id)
         {
+            //if user want to cancel his book
             var booking = _context.Bookings.SingleOrDefault(u => u.Bookingid == id);
             var room = _context.Rooms.SingleOrDefault(u => u.Roomid == booking.Roomid);
+
+            // reset the dates
             room.BookedFrom = null;
             room.BookedTo = null;
 
             booking.Status = SD.BookingStatus_Cancelled;
+
+            // refund the money if the booking is confirmed
+            if (booking.Status.Equals(SD.BookingStatus_Confirmed))
+            {
+                //
+            }
+
             _context.Bookings.Update(booking);
             _context.Rooms.Update(room);
             _context.SaveChanges();

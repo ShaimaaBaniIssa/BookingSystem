@@ -1,4 +1,4 @@
-﻿ using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BookingSystem.Models;
 using Microsoft.Extensions.Hosting;
-using BookingSystem.Utility;
 
 namespace BookingSystem.Controllers
 {

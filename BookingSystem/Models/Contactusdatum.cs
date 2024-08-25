@@ -16,4 +16,7 @@ public partial class Contactusdatum
     public string? Description { get; set; }
 
     public string? Locationurl { get; set; }
+    public decimal? HomeId { get; set; }
+
+    public virtual Homedatum? Homedatum { get; set; }
 }

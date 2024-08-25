@@ -31,6 +31,7 @@ namespace BookingSystem.Controllers
             var modelContext = _context.Bookings.Include(b => b.Customer).Include(b => b.Room);
             ViewBag.Benefit = modelContext.Sum(u => u.Totalprice);
 
+            // to get the charts data
             Charts();
 
 
@@ -41,13 +42,8 @@ namespace BookingSystem.Controllers
         {
             var modelContext = _context.Bookings.Include(b => b.Customer).Include(b => b.Room);
 
-            //if (startDate == null && endDate == null)
-            //{ 
-            //    ViewBag.Benefit = modelContext.Sum(u => u.Totalprice);
-            //    return View(modelContext); }
-
+            // to get the charts data
             Charts();
-
 
             if (startDate != null && endDate == null)
             {
@@ -148,6 +144,7 @@ namespace BookingSystem.Controllers
 
 
         }
+        // admin can change the status of the book to check out
         public IActionResult CheckOut(decimal bookingId)
         {
             var booking = _context.Bookings.SingleOrDefault(u => u.Bookingid == bookingId);
@@ -162,6 +159,7 @@ namespace BookingSystem.Controllers
 
             return RedirectToAction(nameof(Search));
         }
+        // admin can cancel the book
         public IActionResult CancelBook(decimal bookingId)
         {
             var booking = _context.Bookings.SingleOrDefault(u => u.Bookingid == bookingId);
