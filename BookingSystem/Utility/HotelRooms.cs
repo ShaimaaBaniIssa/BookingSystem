@@ -4,6 +4,8 @@
     {
         public string HotelName { get; set; }
         public int NumOfRooms { get; set; }
+        public decimal? Id { get; set; }
+
 
     }
 }

@@ -1,9 +1,25 @@
-﻿@model Tuple<List<HotelRooms>, List<HotelRooms>>
+﻿@model Tuple<IEnumerable<HotelRooms>, IEnumerable<HotelRooms>>
 @{
     ViewData["Title"] = "Admin Dashboard";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var months = ViewBag.Months;
+    var years = ViewBag.Years;
+ 
 }
 
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>
+        Admin Dashboard
+    </title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+</head>
+<body>
 
 <div class="row">
     <div class="col-md-12">
@@ -51,6 +67,8 @@
                                 <table class="table table-hover">
                                 <thead>
                                     <tr>
+                                                <th>Hotel Id</th>
+
                                         <th>Hotel Name</th>
                                         <th>Available Rooms</th>
                                         
@@ -65,6 +83,8 @@
                                         }
                                     @foreach(var item in Model.Item1){
                                     <tr>
+                                                    <td>@item.Id</td>
+
                                         <td>@item.HotelName</td>
 
                                                 <td>
@@ -87,6 +107,8 @@
                                 <table class="table table-hover">
                                 <thead>
                                     <tr>
+                                                <th>Hotel Id</th>
+
                                         <th>Hotel Name</th>
                                         <th>Booked Rooms</th>
 
@@ -102,6 +124,8 @@
                                     @foreach (var item in Model.Item2)
                                     {
                                         <tr>
+                                                    <td>@item.Id</td>
+
                                             <td>@item.HotelName</td>
 
                                                 <td >
@@ -117,9 +141,96 @@
                     </div>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-lg-6 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                    <canvas id="availableRoomChart" style="width:100%;max-width:600px"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                        <div class="col-lg-6 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <canvas id="bookedRoomChart" style="width:100%;max-width:600px"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                </div>
             </div>
         </div>
     </div>
 </div>
 
+    <script>
 
+        var xValues = [];
+        var yValues = [];
+        var barColors = ["red", "green", "blue", "orange", "brown"];
+
+
+        @foreach (var x in Model.Item1)
+        {
+            @:xValues.push(@x.Id);
+            @:yValues.push(@x.NumOfRooms);
+
+        }
+
+            yValues.push(0);
+
+            new Chart("availableRoomChart", {
+            type: "pie",
+            data: {
+                labels: xValues,
+                datasets: [{
+                    backgroundColor: barColors,
+                    data: yValues
+                }]
+            },
+            options: {
+                legend: { display: false },
+                title: {
+                    display: true,
+                    text: "Available Rooms"
+                }
+            }
+        });
+    </script>
+    <script>
+
+        var xValues = [];
+        var yValues = [];
+        var barColors = ["brown", "green", "blue", "orange", "red"];
+
+
+        @foreach (var x in Model.Item2)
+        {
+            @:xValues.push(@x.Id);
+            @:yValues.push(@x.NumOfRooms);
+
+        }
+
+            yValues.push(0);
+
+        new Chart("bookedRoomChart", {
+            type: "pie",
+            data: {
+                labels: xValues,
+                datasets: [{
+                    backgroundColor: barColors,
+                    data: yValues
+                }]
+            },
+            options: {
+                legend: { display: false },
+                title: {
+                    display: true,
+                    text: "Booked Rooms"
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>

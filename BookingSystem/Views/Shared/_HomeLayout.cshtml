@@ -60,13 +60,11 @@
                         <div class="nav-menu">
                             <nav class="mainmenu">
                                 <ul>
-                                    <li class="active"><a asp-action="Index" asp-controller="Home">Home</a></li>
-                                    <li><a asp-action="Hotels" asp-controller="Home">Hotels</a></li>
-                                    <li><a asp-action="AboutUs" asp-controller="Home">About Us</a></li>
-                                    <li><a asp-action="ContactUs" asp-controller="Home">Contact Us</a></li>
+                                    <li class="@Html.IsActive("Home", "Index")"><a asp-action="Index" asp-controller="Home">Home</a></li>
+                                    <li class="@Html.IsActive("Home", "Hotels")"><a asp-action="Hotels" asp-controller="Home">Hotels</a></li>
+                                    <li class="@Html.IsActive("Home", "AboutUs")"><a asp-action="AboutUs" asp-controller="Home">About Us</a></li>
+                                    <li class="@Html.IsActive("Home", "ContactUs")"><a asp-action="ContactUs" asp-controller="Home">Contact Us</a></li>
 
-                                    
-                                
                                     @if (userName==null)
                                     {
                                         <li><a asp-controller="Account" asp-action="Register">Register</a></li>

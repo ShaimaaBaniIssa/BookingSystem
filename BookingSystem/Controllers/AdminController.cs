@@ -30,14 +30,28 @@ namespace BookingSystem.Controllers
             ViewBag.NewTestimonials = _context.Testimonials.Where(u => u.Status.Equals(SD.Testimonial_Pending)).Count();
 
             // get the number of available rooms in each hotel
-            List<HotelRooms> availableRooms = _context.Rooms.Where(u => u.BookedFrom == null && u.BookedTo == null).Include(r => r.Hotel)
-                .GroupBy(u => u.Hotelid).Select(grp => new HotelRooms() { HotelName = grp.First().Hotel.Name, NumOfRooms = grp.Count() }).ToList();
+            IEnumerable<HotelRooms> availableRooms = _context.Rooms.Where(u => u.BookedFrom == null && u.BookedTo == null).Include(r => r.Hotel)
+                .GroupBy(u => u.Hotelid)
+                .Select(grp => new HotelRooms() 
+                { HotelName = grp.First().Hotel.Name,
+                    NumOfRooms = grp.Count(),
+                    Id = grp.First().Hotelid
+                }).ToArray();
 
             // get the number of booked rooms in each hotel
-            List<HotelRooms> bookedRooms = _context.Rooms.Where(u => u.BookedFrom != null && u.BookedTo != null).Include(r => r.Hotel)
-                .GroupBy(u => u.Hotelid).Select(grp => new HotelRooms() { HotelName = grp.First().Hotel.Name, NumOfRooms = grp.Count() }).ToList();
+            IEnumerable<HotelRooms> bookedRooms = _context.Rooms.Where(u => u.BookedFrom != null && u.BookedTo != null).Include(r => r.Hotel)
+                .GroupBy(u => u.Hotelid)
+                .Select(grp => new HotelRooms()
+                {
+                    HotelName = grp.First().Hotel.Name,
+                    NumOfRooms = grp.Count(),
+                    Id = grp.First().Hotelid
+                }
+                ).ToArray();
 
-            var tuple = Tuple.Create<List<HotelRooms>, List<HotelRooms>>(availableRooms, bookedRooms);
+      
+
+            var tuple = Tuple.Create<IEnumerable<HotelRooms>, IEnumerable<HotelRooms>>(availableRooms, bookedRooms);
             return View(tuple);
         }
         public IActionResult Profile()

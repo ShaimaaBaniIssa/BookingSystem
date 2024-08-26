@@ -242,11 +242,14 @@
         console.log(yValues);
 
         new Chart("monthsChart", {
-            type: "bar",
+            type: "line",
             data: {
                 labels: xValues,
                 datasets: [{
-                    backgroundColor: barColors,
+                    fill: false,
+                    lineTension: 0,
+                    backgroundColor: "rgba(0,0,255,1.0)",
+                    borderColor: "rgba(0,0,255,0.1)",
                     data: yValues
                 }]
             },
