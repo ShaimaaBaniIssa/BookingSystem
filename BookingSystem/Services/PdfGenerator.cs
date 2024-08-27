@@ -33,7 +33,7 @@ namespace BookingSystem.Services
                          });
 
 
-                         row.ConstantItem(100).Height(50).AlignRight().AlignMiddle().Image("e9_logo.png", ImageScaling.FitArea);
+                         row.ConstantItem(100).Height(50).AlignRight().AlignMiddle().Image(invoice.LogoPath, ImageScaling.FitArea);
                      });
 
                      page.Content().Column(column =>

@@ -23,7 +23,8 @@ namespace BookingSystem.Controllers
             _emailSender = emailSender;
         }
 
-        public async Task<IActionResult> IndexAsync(string? hotelId, string? pageNumber = "1")
+        [HttpGet]
+        public async Task<IActionResult> Index(string? hotelId, string? pageNumber = "1")
         {
 
             // view home page data
@@ -44,9 +45,16 @@ namespace BookingSystem.Controllers
             ViewBag.AboutUs = aboutUs;
 
             // for the drop down list
-            ViewData["HotelNames"] = new SelectList(_context.Hotels, "Hotelid", "Name");
-            ViewData["RoomsType"] = new SelectList(_context.Rooms.Where(u => u.Hotelid == Convert.ToInt32(hotelId)), "Roomid", "Roomtype");
-
+            ViewBag.HotelNames = new SelectList(_context.Hotels, "Hotelid", "Name");
+            ViewBag.RoomsType = new SelectList(_context.Rooms.Where(u => u.Hotelid == Convert.ToInt32(hotelId)), "Roomid", "Roomtype");
+            if (hotelId != null)
+            {
+                ViewBag.Hotel = _context.Hotels.Select(u => new
+                {
+                    Hotelid=u.Hotelid,
+                    Name=u.Name,
+                }).FirstOrDefault(u=>u.Hotelid== Convert.ToInt32(hotelId));
+            }
             // for pagination
             var hotels = _context.Hotels.AsNoTracking().Skip((Convert.ToInt32(pageNumber) - 1) * 3).Take(3).ToList();
 
@@ -57,7 +65,20 @@ namespace BookingSystem.Controllers
             
             return View(tuple);
         }
+        [HttpGet]
+        public void GetData(string hotelId)
+        {
+            //List<SelectListItem> data = new List<SelectListItem>();
 
+            //var rooms = _context.Rooms.Where(u => u.Hotelid == Convert.ToInt32(hotelId));
+            //foreach (var item in rooms)
+            //{
+            //    data.Add(new SelectListItem { Value = item.Roomid.ToString(), Text = item.Roomtype });
+            //}
+            ViewBag.RoomsType = new SelectList(_context.Rooms.Where(u => u.Hotelid == Convert.ToInt32(hotelId)), "Roomid", "Roomtype");
+
+
+        }
         public async Task<IActionResult> Hotels(string? hotelName, string? pageNumber = "1")
         {
             // if hotel name not null --> seach by hotel name
@@ -205,7 +226,7 @@ namespace BookingSystem.Controllers
             return RedirectToAction("RoomDetails", new { roomId = roomId });
 
         }
-        public async Task<IActionResult> BookRoom(string? hotelId, string? roomId, DateTime checkIn, DateTime checkOut, string numOfPersons, bool pay)
+        public async Task<IActionResult> BookRoom(string? hotelId, string? roomId, DateTime checkIn, DateTime checkOut, string numOfPersons, bool payLater)
         {
             Room? roomData = null;
 
@@ -259,7 +280,7 @@ namespace BookingSystem.Controllers
                 _context.SaveChanges();
 
                 // want to pay later
-                if (!pay)
+                if (payLater)
                 {
                     return RedirectToAction(nameof(UserBookings));
 

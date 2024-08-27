@@ -192,37 +192,7 @@
         </div>
       
     </div>
-       
-
-
-    
-   
-    <button onclick="saveAsPDF();">save charts as pdf</button>
-    @* generate pdf for charts *@
-    <script>
-        
-        function saveAsPDF() {
-            const canvas1 = document.getElementById("monthsChart");
-            const canvasImage1 = canvas1.toDataURL('image1/jpeg', 1.0);
-
-            const canvas2 = document.getElementById("yearsChart");
-            const canvasImage2 = canvas2.toDataURL('image2/jpeg', 1.0);
-
-
-
-            let pdf = new jsPDF();
-          
-            pdf.setFontSize(20);
-            pdf.addImage(canvasImage1,'JPEG',30,30,150,70);
-            pdf.addImage(canvasImage2, 'JPEG', 30, 120, 150, 70);
-
-            pdf.text(15, 15, "Benefits chart");
-            pdf.save('test.pdf');
-
-        }
-    </script>
-
- 
+      
     @* months chart *@
     <script>
         
@@ -242,14 +212,11 @@
         console.log(yValues);
 
         new Chart("monthsChart", {
-            type: "line",
+            type: "bar",
             data: {
                 labels: xValues,
                 datasets: [{
-                    fill: false,
-                    lineTension: 0,
-                    backgroundColor: "rgba(0,0,255,1.0)",
-                    borderColor: "rgba(0,0,255,0.1)",
+                    backgroundColor: barColors,
                     data: yValues
                 }]
             },
@@ -314,12 +281,22 @@
 
                 dom: 'Bfrtip',
                 buttons: [
-                    { extend: 'copyHtml5', footer: true },
+                    { extend: 'copyHtml5', footer: true, },
                     { extend: 'excelHtml5', footer: true },
                     { extend: 'csvHtml5', footer: true },
                     {
                         extend: 'pdfHtml5', footer: true, exportOptions: {
                             stripNewlines: false
+                        },
+                        text: 'Export PDF', customize: function (doc) {
+                            // Capture chart as image                      
+                            var canvas1 = document.getElementById('monthsChart');
+                            var chart1 = canvas1.toDataURL('image/png');
+                             doc.content.push({image: chart1, width: 300 });
+
+                            var canvas2 = document.getElementById('yearsChart');
+                            var chart2 = canvas2.toDataURL('image/png');
+                            doc.content.push({ image: chart2, width: 300 });
                         }
                     }
                 ]

@@ -55,11 +55,14 @@ namespace BookingSystem.Controllers
         && u.Cardholdername == bankcard.Cardholdername
         && u.CardType == bankcard.CardType
         && u.Cvv == bankcard.Cvv
-        
-
         );
+            if (card == null)
+            {
+                TempData["error"] = "wrong info";
+                return RedirectToAction("Index", new { bookingId });
+            }
             var isEqual = card.Expirydate.ToString("dd MMMM yyyy").Equals(bankcard.Expirydate.ToString("dd MMMM yyyy"));
-            if ( card == null || !isEqual)
+            if (!isEqual)
             {
                 TempData["error"] = "wrong info";
                 return RedirectToAction("Index", new {bookingId});
