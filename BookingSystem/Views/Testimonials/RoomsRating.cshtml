@@ -1,0 +1,92 @@
+﻿@model IEnumerable<RoomRating>
+
+@{
+    ViewData["Title"] = "RoomsRating";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
+<h1 class="text-primary">RoomsRating</h1>
+
+<table class="table mb-4">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.RoomId)
+            </th>
+            <th>
+                Avearge Rating
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RoomType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HotelName)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.RoomId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Rating)
+            </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RoomType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.HotelName)
+                </td>
+        </tr>
+}
+    </tbody>
+</table>
+<div class="row">
+    <div class="col-lg-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <canvas id="roomChart" style="width:100%;max-width:600px"></canvas>
+            </div>
+        </div>
+    </div>
+    
+
+</div>
+<script>
+    var xValues = [];
+    var yValues = [];
+    var barColors = ["red", "green", "blue", "orange", "brown"];
+
+    @foreach (var d in Model)
+    {
+        @:xValues.push(@d.RoomId);
+        @:yValues.push(@d.Rating);
+
+    }
+
+        yValues.push(0);
+    console.log(xValues);
+    console.log(yValues);
+    new Chart("roomChart", {
+        type: "horizontalBar",
+        data: {
+            labels: xValues,
+            datasets: [{
+                backgroundColor: barColors,
+                data: yValues
+            }]
+        },
+        options: {
+            legend: { display: false },
+            title: {
+                display: true,
+                text: "Rooms Rating"
+            },
+           
+        }
+    });
+</script>
+

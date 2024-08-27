@@ -47,6 +47,28 @@ namespace BookingSystem.Controllers
             return RedirectToAction(nameof(Index));
 
         }
-       
+        public async Task<IActionResult> RoomsRating()
+        {
+            var roomsRating = _context.Testimonials
+                .Where(u=>u.Status==SD.Testimonial_Approved)
+                .Include(u => u.Room)
+                .ThenInclude(u=>u.Hotel)
+                .GroupBy(u => u.Roomid)
+                .Select(grp => new RoomRating
+                {
+                    RoomId = grp.First().Roomid,
+                    Rating = Math.Round(grp.Average(u => u.Rating ?? 0)),
+                    RoomType=grp.First().Room.Roomtype,
+                    HotelName = grp.First().Room.Hotel.Name
+
+                })
+                .OrderByDescending(u=>u.Rating)
+                .ToList();
+
+            return View(roomsRating);
+        }
+
+
+
     }
 }

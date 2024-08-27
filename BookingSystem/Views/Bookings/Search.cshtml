@@ -114,7 +114,7 @@
                         <a class="btn btn-info" asp-controller="Bookings" asp-action="CheckOut" asp-route-bookingId="@item.Bookingid">Check Out</a>
                     </td>
                     }
-                    @if (!item.Status.Equals(SD.BookingStatus_CheckedOut) && !item.Equals(SD.BookingStatus_CheckedIn))
+                    @if (item.Status.Equals(SD.Testimonial_Pending))
                     {
                         <td>
                             <a class="btn btn-danger" asp-controller="Bookings" asp-action="Cancel" asp-route-bookingId="@item.Bookingid">Cancel</a>
