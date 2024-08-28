@@ -100,10 +100,10 @@
                     {
                         <div class="review-item">
                             <div class="ri-pic">
-                                <img src="~/HomeAssest/img/room/avatar/avatar-1.jpg" alt="">
+                                    <img src="~/images/user2.png" />
                             </div>
                             <div class="ri-text">
-                                <span>@item.TDate</span>
+                                    <span>@item.TDate?.ToString("dd MMMM yyyy")</span>
                                 <div class="rating">
                                     @for(int i=1; i<=item.Rating; i++)
                                         {
@@ -200,7 +200,7 @@
                         @if (userId != null)
                         {
                             <button type="submit">Book Now</button>
-                            <button asp-action="UserBookings" asp-controller="Home" type="submit">Save and pay later</button>
+                            <button asp-action="BookRoom" asp-controller="Home" asp-route-payLater="true">Save and pay later</button>
 
 
                         }

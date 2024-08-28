@@ -1,4 +1,4 @@
-﻿using BookingSystem.Models;
+﻿using BookingSystem.Utility;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;

@@ -16,7 +16,7 @@
                             @Html.DisplayNameFor(model => model.Reviewtext)
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.Room)
+                            @Html.DisplayNameFor(model => model.Roomid)
                         </th>
                         <th>
                             @Html.DisplayNameFor(model => model.Customer)
@@ -51,7 +51,14 @@
                                 @Html.DisplayFor(modelItem => item.Customerid)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.Rating)
+                                @for (int i = 1; i <= item.Rating; i++)
+                                {
+                                    <i class="mdi mdi-star" style="color:gold"></i>
+                                }
+                                @for (int i = 1; i <= (5 - item.Rating); i++)
+                                {
+                                    <i class="mdi mdi-star-outline"></i>
+                                }
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.Status)

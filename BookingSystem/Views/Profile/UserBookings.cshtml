@@ -1,0 +1,104 @@
+﻿@model IEnumerable<BookingSystem.Models.Booking>
+
+@{
+    ViewData["Title"] = "UserBookings";
+    Layout = "~/Views/Shared/_HomeLayout.cshtml";
+}
+
+<div class="container">
+    <div class="col-lg-12 grid-margin stretch-card">
+        <div class="card mb-2">
+            <div class="card-header">
+                <h4>UserBookings</h4>
+
+            </div>
+            <div class="card-body">
+               
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Checkin)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Checkout)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Totalprice)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Numberofpersons)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Status)
+                            </th>
+
+                            <th>
+                                @Html.DisplayNameFor(model => model.Roomid)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Room.Roomtype)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Room.Hotel.Name)
+
+                            </th>
+                            <th></th>
+                            <th></th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                       
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @item.Checkin?.ToString("dd MMMM yyyy")
+                                </td>
+                                <td>
+                                    @item.Checkout?.ToString("dd MMMM yyyy")
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Totalprice)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Numberofpersons)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Status)
+                                </td>
+
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Roomid)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Room.Roomtype)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Room.Hotel.Name)
+                                </td>
+                                @if (item.Status.Equals(SD.BookingStatus_Pending))
+                                {
+                                    <td>
+                                        <a class="btn btn-success" asp-controller="Payment" asp-action="Pay" asp-route-bookingId="@item.Bookingid">Pay</a>
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-danger" asp-action="CancelBook" asp-route-id="@item.Bookingid">Cancel</a>
+
+                                    </td>
+                                }
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                @if (Model.Count() == 0)
+                {
+                    <div style="height:150px"></div>
+                }
+            </div>
+        </div>
+    </div>
+
+</div>

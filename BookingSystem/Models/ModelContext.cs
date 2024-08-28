@@ -62,6 +62,9 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.Checkout)
                 .HasColumnType("DATE")
                 .HasColumnName("CHECKOUT");
+            entity.Property(e => e.BookDate)
+               .HasColumnType("DATE")
+               .HasColumnName("BOOKDATE");
             entity.Property(e => e.Customerid)
                 .HasColumnType("NUMBER(38)")
                 .HasColumnName("CUSTOMERID");

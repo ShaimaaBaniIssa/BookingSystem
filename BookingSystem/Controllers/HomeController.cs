@@ -159,47 +159,7 @@ namespace BookingSystem.Controllers
             return View(room);
 
         }
-        public async Task<IActionResult> Profile()
-        {
-            var customerId = HttpContext.Session.GetInt32("Id");
-            var customer = await _context.Customers.SingleOrDefaultAsync(u => u.Customerid == customerId);
-            return View(customer);
-        }
-        public async Task<IActionResult> EditProfile()
-        {
-            var customerId = HttpContext.Session.GetInt32("Id");
-            var customer = await _context.Customers.SingleOrDefaultAsync(u => u.Customerid == customerId);
-
-            return View(customer);
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditProfile([Bind("Customerid,Firstname,Lastname,Email,Phonenumber")] Customer customer)
-        {
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(customer);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    TempData["error"] = "Error";
-                }
-                return RedirectToAction(nameof(Profile));
-            }
-            return View(customer);
-        }
-        public async Task<IActionResult> UserBookings()
-        {
-            // return all user bookings
-            var customerId = HttpContext.Session.GetInt32("Id");
-            var bookings = await _context.Bookings.Include(u => u.Room).ThenInclude(u => u.Hotel).Where(u => u.Customerid == customerId).ToListAsync();
-
-            return View(bookings);
-        }
+       
         public ActionResult AddTestimony(string reviewText, decimal roomId, string rating)
         {
             // check if the user is logged in or no
@@ -277,7 +237,8 @@ namespace BookingSystem.Controllers
                     Roomid = roomData.Roomid,
                     Numberofpersons = Convert.ToInt32(numOfPersons),
                     Totalprice = roomData.Price * days,
-                    Status = SD.BookingStatus_Pending
+                    Status = SD.BookingStatus_Pending,
+                    BookDate=DateTime.Now,
                 };
                 // change the room dates availability
                 roomData.BookedFrom = checkIn;
@@ -290,7 +251,7 @@ namespace BookingSystem.Controllers
                 // want to pay later
                 if (payLater)
                 {
-                    return RedirectToAction(nameof(UserBookings));
+                    return RedirectToAction("UserBookings", "Profile");
 
                 }
                 return RedirectToAction("Pay", "Payment",
@@ -317,17 +278,11 @@ namespace BookingSystem.Controllers
 
             booking.Status = SD.BookingStatus_Cancelled;
 
-            // refund the money if the booking is confirmed
-            if (booking.Status.Equals(SD.BookingStatus_Confirmed))
-            {
-                //
-            }
-
             _context.Bookings.Update(booking);
             _context.Rooms.Update(room);
             _context.SaveChanges();
 
-            return RedirectToAction(nameof(UserBookings));
+            return RedirectToAction("UserBookings", "Profile");
         }
         public IActionResult RedirectTo(string name,decimal? roomId)
         {

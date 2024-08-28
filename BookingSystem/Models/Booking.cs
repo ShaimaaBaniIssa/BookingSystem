@@ -11,6 +11,7 @@ public partial class Booking
     public DateTime? Checkin { get; set; }
 
     public DateTime? Checkout { get; set; }
+    public DateTime? BookDate { get; set; }
 
     public decimal? Totalprice { get; set; }
 

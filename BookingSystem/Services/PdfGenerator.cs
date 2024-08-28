@@ -1,8 +1,8 @@
-﻿using BookingSystem.Models;
-using QuestPDF.Fluent;
+﻿using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
+using BookingSystem.Utility;
 namespace BookingSystem.Services
 {
     public class PdfGenerator : IPdfGenerator

@@ -1,8 +1,8 @@
-﻿namespace BookingSystem.Models
+﻿namespace BookingSystem.Utility
 {
     public class Invoice
     {
-        
+
         public string CustomerName { get; set; }
         public string HotelName { get; set; }
         public string RoomType { get; set; }

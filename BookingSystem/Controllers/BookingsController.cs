@@ -33,8 +33,6 @@ namespace BookingSystem.Controllers
 
             // to get the charts data
             Charts();
-
-
             return View(await modelContext.ToListAsync());
         }
         [HttpPost]
@@ -47,13 +45,13 @@ namespace BookingSystem.Controllers
 
             if (startDate != null && endDate == null)
             {
-                var result = await modelContext.Where(x => x.Checkin.Value.Date >= startDate).ToListAsync();
+                var result = await modelContext.Where(x => x.BookDate.Value.Date >= startDate).ToListAsync();
                 ViewBag.Benefit = result.Sum(u => u.Totalprice);
                 return View(result);
             }
             else if (startDate == null && endDate != null)
             {
-                var result = await modelContext.Where(x => x.Checkin.Value.Date <= endDate).ToListAsync();
+                var result = await modelContext.Where(x => x.BookDate.Value.Date <= endDate).ToListAsync();
                 ViewBag.Benefit = result.Sum(u => u.Totalprice);
 
                 return View(result);
@@ -61,7 +59,7 @@ namespace BookingSystem.Controllers
             else if(startDate != null && endDate != null)
             {
                 var result = await modelContext
-                    .Where(x => x.Checkin.Value.Date <= endDate && x.Checkin.Value.Date >= startDate)
+                    .Where(x => x.BookDate.Value.Date <= endDate && x.BookDate.Value.Date >= startDate)
                     .ToListAsync();
                 ViewBag.Benefit = result.Sum(u => u.Totalprice);
 
@@ -70,7 +68,7 @@ namespace BookingSystem.Controllers
             else if (month != null)
             {
                 var result = await modelContext
-                   .Where(x =>  x.Checkin.Value.Month == Convert.ToInt32(month))
+                   .Where(x =>  x.BookDate.Value.Month == Convert.ToInt32(month))
                    .ToListAsync();
                 ViewBag.Benefit = result.Sum(u => u.Totalprice);
 
@@ -79,7 +77,7 @@ namespace BookingSystem.Controllers
             else if (year != null)
             {
                 var result = await modelContext
-                   .Where(x => x.Checkin.Value.Year == Convert.ToInt32(year))
+                   .Where(x => x.BookDate.Value.Year == Convert.ToInt32(year))
                    .ToListAsync();
                 ViewBag.Benefit = result.Sum(u => u.Totalprice);
 
@@ -90,29 +88,42 @@ namespace BookingSystem.Controllers
         }
         public void Charts()
         {
+            var booking = _context.Bookings;
             // months chart
-            var months = _context.Bookings
-                .OrderByDescending(u => u.Checkin.Value.Month)
-                .GroupBy(u => u.Checkin.Value.Month)
-                .Select(grp => new
-                {
-                    month = grp.First().Checkin.Value.Month.ToString(),
-                    count = grp.Count()
-                }).ToArray();
-
+            var months = booking
+                .OrderBy(u => u.BookDate.Value.Month)
+                .GroupBy(u => u.BookDate.Value.Month);
+                
             // years chart
-            var years = _context.Bookings
-                .OrderByDescending(u => u.Checkin.Value.Year)
-                .GroupBy(u => u.Checkin.Value.Year)
-                .Select(grp => new
-                {
-                    year = grp.First().Checkin.Value.Year.ToString(),
-                    count = grp.Count()
-                }).ToArray();
+            var years = booking
+                .OrderBy(u => u.BookDate.Value.Year)
+                .GroupBy(u => u.BookDate.Value.Year);
 
+                
+            ViewBag.Months = months.Select(grp => new
+            {
+                month = grp.First().BookDate.Value.Month.ToString(),
+                count = grp.Count()
+            }).ToArray();
 
-            ViewBag.Months = months;
-            ViewBag.Years = years;
+            ViewBag.Years = years.Select(grp => new
+            {
+                year = grp.First().BookDate.Value.Year.ToString(),
+                count = grp.Count()
+            }).ToArray();
+
+            ViewBag.MonthsBenefit = months.Select(grp => new
+            {
+                month = grp.First().BookDate.Value.Month.ToString(),
+                count = grp.Sum(u => u.Totalprice)
+
+            });
+            ViewBag.YearsBenefit = years.Select(grp => new
+            {
+                year = grp.First().BookDate.Value.Year.ToString(),
+                count = grp.Sum(u => u.Totalprice)
+            }).ToArray();
+
         }
         [HttpPost]
         public async Task<IActionResult> Search(DateTime? startDate, DateTime? endDate)
@@ -126,18 +137,18 @@ namespace BookingSystem.Controllers
 
             else if (startDate != null && endDate == null)
             {
-                var result = await modelContext.Where(x => x.Checkin.Value.Date >= startDate).ToListAsync();
+                var result = await modelContext.Where(x => x.BookDate.Value.Date >= startDate).ToListAsync();
                 return View(result);
             }
             else if (startDate == null && endDate != null)
             {
-                var result = await modelContext.Where(x => x.Checkin.Value.Date <= endDate).ToListAsync();
+                var result = await modelContext.Where(x => x.BookDate.Value.Date <= endDate).ToListAsync();
                 return View(result);
             }
             else
             {
                 var result = await modelContext
-                    .Where(x => x.Checkin.Value.Date <= endDate && x.Checkin.Value.Date >= startDate)
+                    .Where(x => x.BookDate.Value.Date <= endDate && x.BookDate.Value.Date >= startDate)
                     .ToListAsync();
                 return View(result);
             }

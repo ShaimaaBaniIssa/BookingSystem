@@ -116,7 +116,7 @@ namespace BookingSystem.Controllers
 
         
             // all user bookings
-            return RedirectToAction("UserBookings","Home");
+            return RedirectToAction("UserBookings", "Profile");
 
         }
       
