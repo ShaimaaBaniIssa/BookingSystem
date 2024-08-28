@@ -226,13 +226,21 @@ namespace BookingSystem.Controllers
             return RedirectToAction("RoomDetails", new { roomId = roomId });
 
         }
-        public async Task<IActionResult> BookRoom(string? hotelId, string? roomId, DateTime checkIn, DateTime checkOut, string numOfPersons, bool payLater)
+        public async Task<IActionResult> BookRoom(string? hotelId, string? roomId, DateTime checkIn, DateTime checkOut, string numOfPersons, bool payLater, string source)
         {
+
             Room? roomData = null;
+            var validCheckIn = !checkIn.Year.Equals(0001);
+            var validCheckOut = !checkOut.Year.Equals(0001);
 
-            if (roomId != null && hotelId != null && checkIn != null && checkOut != null && numOfPersons != null)
+            if (roomId != null && hotelId != null && validCheckIn && validCheckOut && numOfPersons != null)
             {
-
+                // check in after check out day
+                if (checkIn.CompareTo(checkOut) > 0)
+                {
+                    TempData["warning"] = "Check in date must be before Check out date";
+                    RedirectTo(source, Convert.ToInt32(roomId));
+                }
                 var hotelData = await _context.Hotels.SingleOrDefaultAsync(u => u.Hotelid == Convert.ToInt32(hotelId));
                 // room type is availble in this hotel and less than max Capacity of the room
 
@@ -244,19 +252,19 @@ namespace BookingSystem.Controllers
                 if (roomData == null)
                 {
                     TempData["warning"] = "Room is not found";
-                    return RedirectToAction("Index");
+                    RedirectTo(source, Convert.ToInt32(roomId));
 
                 }
                 if (roomData.Maxcapacity < Convert.ToInt32(numOfPersons))
                 {
                     TempData["warning"] = $"Room Max capacity is {roomData.Maxcapacity}";
-                    return RedirectToAction("Index");
+                    RedirectTo(source, Convert.ToInt32(roomId));
 
                 }
                 if (checkIn.Date >= roomData.BookedFrom || checkOut.Date <= roomData.BookedTo)
                 {
                     TempData["warning"] = $"Room is unavailable from {roomData.BookedFrom?.ToString("dd MMMM yy")} to {roomData.BookedTo?.ToString("dd MMMM yy")}";
-                    return RedirectToAction("Index");
+                    RedirectTo(source, Convert.ToInt32(roomId));
 
                 }
                 // calculate the days
@@ -294,7 +302,7 @@ namespace BookingSystem.Controllers
             }
 
             TempData["warning"] = "Complete the required data";
-            return RedirectToAction("Index");
+            return RedirectTo(source, Convert.ToInt32(roomId));
 
         }
         public IActionResult CancelBook(decimal id)
@@ -321,6 +329,16 @@ namespace BookingSystem.Controllers
 
             return RedirectToAction(nameof(UserBookings));
         }
-
+        public IActionResult RedirectTo(string name,decimal? roomId)
+        {
+            if (name.Equals("home"))
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                return RedirectToAction(nameof(RoomDetails), new {roomId});
+            }
+        }
     }
 }

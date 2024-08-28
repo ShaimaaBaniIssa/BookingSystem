@@ -32,6 +32,8 @@
                 <div class="booking-form">
                     <h3>Booking Your Hotel</h3>
                     <form asp-action="BookRoom" >
+                        <input name="source" value="home" hidden>
+
                         <div class="select-option">
                             <label for="hotel">Hotel:</label>
                             <select name="hotelId" asp-items="ViewBag.HotelNames" id="hotelselectlist">

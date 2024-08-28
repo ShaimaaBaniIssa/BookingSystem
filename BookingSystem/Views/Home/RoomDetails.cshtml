@@ -60,7 +60,7 @@
                 <div class="breadcrumb-text">
                     <h2>Our Rooms</h2>
                     <div class="bt-option">
-                        <a href="./home.html">Home</a>
+                        <a asp-action="Hotels">Hotels</a>
                         <span>Rooms</span>
                     </div>
                 </div>
@@ -168,6 +168,9 @@
                     <h3>Your Reservation</h3>
                     <form asp-action="BookRoom">
                         <input name="roomId" value="@Model.Roomid" hidden>
+                        <input name="hotelId" value="@Model.Hotelid" hidden>
+                        <input name="source" value="room" hidden>
+
 
                         <div class="check-date">
                             <label for="date-in">Check In:</label>
@@ -182,8 +185,15 @@
                         <div class="select-option">
                             <label for="numOfPersons">Number Of Persons:</label>
                             <select name="numOfPersons" id="numOfPersons">
-                                <option value="2">2 Adults</option>
-                                <option value="3">3 Adults</option>
+                                <option value="">--Choose an option--</option>
+                                <option value="1">1 Person</option>
+                                <option value="2">2 Persons</option>
+                                <option value="3">3 Persons</option>
+                                <option value="4">4 Persons</option>
+                                <option value="5">5 Persons</option>
+                                <option value="6">6 Persons</option>
+                                <option value="7">7 Persons</option>
+
                             </select>
                         </div>
 

@@ -119,10 +119,7 @@ namespace BookingSystem.Controllers
             return RedirectToAction("UserBookings","Home");
 
         }
-        public ActionResult Invoice()
-        {
-            return View();
-        }
+      
 
     }
 }

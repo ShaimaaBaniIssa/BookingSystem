@@ -6,64 +6,71 @@
 }
 
 <h1 class="text-primary">Testimonials</h1>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Reviewtext)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Room)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Customer)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Rating)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (Model.Count() == 0)
-        {
-            <tr>
-                <td colspan="4">No data yet</td>
-            </tr>
-        }
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Reviewtext)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Roomid)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Customerid)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Rating)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Status)
-                </td>
-                <td>
-                    @if (item.Status.Equals(SD.Testimonial_Pending))
+<div class="col-lg-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Reviewtext)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Room)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Customer)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Rating)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Status)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Count() == 0)
                     {
-                        <a asp-action="ManageStatus" asp-route-id="@item.Testimonialid" asp-route-isApproved="@true">Approve</a>
-                        <span>|</span>
-                        <a asp-action="ManageStatus" asp-route-id="@item.Testimonialid" asp-route-isApproved="@false">Reject</a>
-
+                        <tr>
+                            <td colspan="4">No data yet</td>
+                        </tr>
                     }
+                    @foreach (var item in Model)
+                    {
 
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+                        <tr class="@(item.Status.Equals(SD.Testimonial_Pending) ? "table-warning" : item.Status.Equals(SD.Testimonial_Approved) ? "table-success" : "table-danger")">
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Reviewtext)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Roomid)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Customerid)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Rating)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Status)
+                            </td>
+                            <td>
+                                @if (item.Status.Equals(SD.Testimonial_Pending))
+                                {
+                                    <a asp-action="ManageStatus" asp-route-id="@item.Testimonialid" asp-route-isApproved="@true">Approve</a>
+                                    <span>|</span>
+                                    <a asp-action="ManageStatus" asp-route-id="@item.Testimonialid" asp-route-isApproved="@false">Reject</a>
+
+                                }
+
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

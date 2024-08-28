@@ -7,43 +7,52 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 
 <h1 class="text-primary">RoomsRating</h1>
+<div class="col-lg-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Rooms Average Rating</h4>
 
-<table class="table mb-4">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.RoomId)
-            </th>
-            <th>
-                Avearge Rating
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RoomType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.HotelName)
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.RoomId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Rating)
-            </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.RoomType)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.HotelName)
-                </td>
-        </tr>
-}
-    </tbody>
-</table>
+            <table class="table table-striped mb-4">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.RoomId)
+                        </th>
+                        <th>
+                            Avearge Rating
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.RoomType)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.HotelName)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.RoomId)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Rating)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.RoomType)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.HotelName)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
 <div class="row">
     <div class="col-lg-6 grid-margin stretch-card">
         <div class="card">

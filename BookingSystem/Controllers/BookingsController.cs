@@ -53,7 +53,7 @@ namespace BookingSystem.Controllers
             }
             else if (startDate == null && endDate != null)
             {
-                var result = await modelContext.Where(x => x.Checkout.Value.Date <= endDate).ToListAsync();
+                var result = await modelContext.Where(x => x.Checkin.Value.Date <= endDate).ToListAsync();
                 ViewBag.Benefit = result.Sum(u => u.Totalprice);
 
                 return View(result);
@@ -61,7 +61,7 @@ namespace BookingSystem.Controllers
             else if(startDate != null && endDate != null)
             {
                 var result = await modelContext
-                    .Where(x => x.Checkout.Value.Date <= endDate && x.Checkin.Value.Date >= startDate)
+                    .Where(x => x.Checkin.Value.Date <= endDate && x.Checkin.Value.Date >= startDate)
                     .ToListAsync();
                 ViewBag.Benefit = result.Sum(u => u.Totalprice);
 
@@ -131,13 +131,13 @@ namespace BookingSystem.Controllers
             }
             else if (startDate == null && endDate != null)
             {
-                var result = await modelContext.Where(x => x.Checkout.Value.Date <= endDate).ToListAsync();
+                var result = await modelContext.Where(x => x.Checkin.Value.Date <= endDate).ToListAsync();
                 return View(result);
             }
             else
             {
                 var result = await modelContext
-                    .Where(x => x.Checkout.Value.Date <= endDate && x.Checkin.Value.Date >= startDate)
+                    .Where(x => x.Checkin.Value.Date <= endDate && x.Checkin.Value.Date >= startDate)
                     .ToListAsync();
                 return View(result);
             }
