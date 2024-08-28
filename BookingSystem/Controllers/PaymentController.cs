@@ -49,7 +49,7 @@ namespace BookingSystem.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> PayAsync(Bankcard bankcard,decimal price,decimal bookingId)
+        public async Task<IActionResult> Pay(Bankcard bankcard,decimal price,decimal bookingId)
         {
         var card = _context.Bankcards.FirstOrDefault(u=>u.Cardnumber == bankcard.Cardnumber
         && u.Cardholdername == bankcard.Cardholdername
@@ -59,18 +59,18 @@ namespace BookingSystem.Controllers
             if (card == null)
             {
                 TempData["error"] = "wrong info";
-                return RedirectToAction("Index", new { bookingId });
+                return RedirectToAction("Pay", new { bookingId });
             }
             var isEqual = card.Expirydate.ToString("dd MMMM yyyy").Equals(bankcard.Expirydate.ToString("dd MMMM yyyy"));
             if (!isEqual)
             {
                 TempData["error"] = "wrong info";
-                return RedirectToAction("Index", new {bookingId});
+                return RedirectToAction("Pay", new {bookingId});
             }
             if ( card.Balance < price)
             {
                 TempData["error"] = "You dont have enough balance";
-                return RedirectToAction("Index", new { bookingId });
+                return RedirectToAction("Pay", new { bookingId });
             }
 
             card.Balance = card.Balance - price;
