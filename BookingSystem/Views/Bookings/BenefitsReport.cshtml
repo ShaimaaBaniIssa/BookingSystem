@@ -7,6 +7,8 @@
     var yearsBenefit = ViewBag.YearsBenefit;
     var months = ViewBag.Months;
     var years = ViewBag.Years;
+    var roleId = Context.Session.GetInt32("RoleId");
+
 }
 
 <!DOCTYPE html>
@@ -25,6 +27,9 @@
     
 </head>
 <body>
+    @if (roleId.Equals(2))
+    {
+        
     <div id="content">
         <h1 class="text-primary mb-4">Benefits Report</h1>
 
@@ -205,8 +210,13 @@
             </div>
         </div>
       
-    </div>
-      
+        </div>
+    }
+    else
+    {
+        <h2 class="text-danger text-center">Admin Should Login</h2>
+
+    }
     @* months Benefit Chart *@
     <script>
 

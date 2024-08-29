@@ -3,7 +3,11 @@
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var roleId = Context.Session.GetInt32("RoleId");
+
 }
+@if (roleId.Equals(2))
+{
 
 <h1 class="text-primary">Hotels</h1>
 
@@ -79,3 +83,11 @@
 }
     </tbody>
 </table>
+
+}
+else
+{
+    <h2 class="text-danger text-center">Admin Should Login</h2>
+
+}
+

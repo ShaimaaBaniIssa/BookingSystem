@@ -1,4 +1,7 @@
-﻿
+﻿@{
+    var roleId = Context.Session.GetInt32("RoleId");
+
+}
 
 <!DOCTYPE html>
 
@@ -66,7 +69,10 @@
                             <span class="menu-title">Dashboard</span>
                         </a>
                     </li>
-                   
+                    @if (roleId.Equals(2))
+                    {
+                        
+                    
                     <li  class="nav-item">
                         <a asp-action="Index" asp-controller="Customers"  class="nav-link" >
                             <span class="icon-bg"><i class="mdi mdi-contacts menu-icon"></i></span>
@@ -118,7 +124,7 @@
                         </a>
 
                     </li>
-                  
+                    }
                 </ul>
             </nav>
       

@@ -10,6 +10,7 @@ using BookingSystem.Utility;
 
 namespace BookingSystem.Controllers
 {
+    
     public class BookingsController : Controller
     {
         private readonly ModelContext _context;

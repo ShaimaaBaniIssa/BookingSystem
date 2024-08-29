@@ -3,6 +3,8 @@
 @{
     Layout = null;
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var roleId = Context.Session.GetInt32("RoleId");
+
 }
 
 <!DOCTYPE html>
@@ -15,8 +17,10 @@
     <link href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css" rel="stylesheet" />
 </head>
 <body>
+    @if (roleId.Equals(2))
+    {
 
-    <h1 class="text-primary mb-4">Bookings</h1>
+ <h1 class="text-primary mb-4">Bookings</h1>
 
     <div class="row mb-4">
         <div class="col-4 ">
@@ -129,6 +133,14 @@
 
         </tbody>
     </table>
+
+    }
+    else
+    {
+        <h2 class="text-danger text-center">Admin Should Login</h2>
+
+    }
+   
 
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js" defer></script>

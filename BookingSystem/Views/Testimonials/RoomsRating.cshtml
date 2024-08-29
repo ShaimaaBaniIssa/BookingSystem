@@ -3,9 +3,13 @@
 @{
     ViewData["Title"] = "RoomsRating";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var roleId = Context.Session.GetInt32("RoleId");
+
 }
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
-
+@if (roleId.Equals(2))
+{
+ 
 <h1 class="text-primary">RoomsRating</h1>
 <div class="col-lg-12 grid-margin stretch-card">
     <div class="card">
@@ -68,9 +72,17 @@
             </div>
         </div>
     </div>
-    
 
-</div>
+
+    </div>
+
+}
+else
+{
+    <h2 class="text-danger text-center">Admin Should Login</h2>
+
+}
+
 <script>
     var xValues = [];
     var yValues = [];
