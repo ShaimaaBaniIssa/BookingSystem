@@ -40,6 +40,7 @@
                 <th>First Name</th>
                 <th>Check in Date</th>
                 <th>Check out Date</th>
+                    <th>Booking Date</th>
                 <th>Num of persons</th>
                 <th>Status</th>
                 <th>Room id</th>
@@ -72,7 +73,9 @@
                     <td>
                         @item.Checkout?.ToString("dd MMMM yyyy")
                     </td>
-                   
+                        <td>
+                            @item.BookDate?.ToString("dd MMMM yyyy")
+                        </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Numberofpersons)
                     </td>

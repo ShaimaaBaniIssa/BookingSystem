@@ -199,7 +199,7 @@ namespace BookingSystem.Controllers
                 if (checkIn.CompareTo(checkOut) > 0)
                 {
                     TempData["warning"] = "Check in date must be before Check out date";
-                    RedirectTo(source, Convert.ToInt32(roomId));
+                    return RedirectTo(source, Convert.ToInt32(roomId));
                 }
                 var hotelData = await _context.Hotels.SingleOrDefaultAsync(u => u.Hotelid == Convert.ToInt32(hotelId));
                 // room type is availble in this hotel and less than max Capacity of the room
@@ -212,19 +212,19 @@ namespace BookingSystem.Controllers
                 if (roomData == null)
                 {
                     TempData["warning"] = "Room is not found";
-                    RedirectTo(source, Convert.ToInt32(roomId));
+                    return RedirectTo(source, Convert.ToInt32(roomId));
 
                 }
                 if (roomData.Maxcapacity < Convert.ToInt32(numOfPersons))
                 {
                     TempData["warning"] = $"Room Max capacity is {roomData.Maxcapacity}";
-                    RedirectTo(source, Convert.ToInt32(roomId));
+                    return RedirectTo(source, Convert.ToInt32(roomId));
 
                 }
                 if (checkIn.Date >= roomData.BookedFrom || checkOut.Date <= roomData.BookedTo)
                 {
                     TempData["warning"] = $"Room is unavailable from {roomData.BookedFrom?.ToString("dd MMMM yy")} to {roomData.BookedTo?.ToString("dd MMMM yy")}";
-                    RedirectTo(source, Convert.ToInt32(roomId));
+                    return RedirectTo(source, Convert.ToInt32(roomId));
 
                 }
                 // calculate the days
