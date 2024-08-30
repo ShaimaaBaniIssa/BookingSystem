@@ -123,27 +123,9 @@
                         @Html.DisplayFor(modelItem => item.Numberofpersons)
                     </td>
                     <td>
-                            @if (item.Status.Equals(SD.BookingStatus_Pending))
-                            {
-                                <label class="badge badge-warning"> @Html.DisplayFor(modelItem => item.Status)</label>
-
-                            }
-                            @if (item.Status.Equals(SD.BookingStatus_Confirmed))
-                            {
-                                <label class="badge badge-success"> @Html.DisplayFor(modelItem => item.Status)</label>
-
-                            }
-                            @if (item.Status.Equals(SD.BookingStatus_Cancelled))
-                            {
-                                <label class="badge badge-danger"> @Html.DisplayFor(modelItem => item.Status)</label>
-
-                            }
-                            @if (item.Status.Equals(SD.BookingStatus_CheckedOut) || item.Status.Equals(SD.BookingStatus_CheckedIn))
-                            {
-                                <label class="badge badge-info"> @Html.DisplayFor(modelItem => item.Status)</label>
-
-                            }
-
+                        <label class="@Html.BookingStatus(item.Status)"> 
+                            @Html.DisplayFor(modelItem => item.Status) 
+                            </label>
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Roomid)
