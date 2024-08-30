@@ -1,6 +1,6 @@
 ﻿@{
     var roleId = Context.Session.GetInt32("RoleId");
-
+    var userId = Context.Session.GetString("Id");
 }
 
 <!DOCTYPE html>
@@ -41,7 +41,7 @@
             <div class="navbar-menu-wrapper d-flex align-items-stretch">
               
                 <ul class="navbar-nav navbar-nav-right">
-                    @if (ViewBag.UserName == null)
+                    @if (userId == null || !roleId.Equals(2))
                     {
                         <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Register">Register</a></li>
                         <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Login">Login</a></li>

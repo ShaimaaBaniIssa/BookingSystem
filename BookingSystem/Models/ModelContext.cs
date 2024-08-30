@@ -250,7 +250,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("REVIEWTEXT");
             entity.Property(e => e.Status)
-                .HasMaxLength(20)
+                .HasMaxLength(200)
                 .IsUnicode(false)
                 .HasColumnName("STATUS");
             entity.Property(e => e.TDate)

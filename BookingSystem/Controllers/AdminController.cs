@@ -19,11 +19,7 @@ namespace BookingSystem.Controllers
         }
         public IActionResult Index()
         {
-            // get the admin name and id , then store it in the session
-            string? userName = HttpContext.Session.GetString("Name");
-            int? roleId = HttpContext.Session.GetInt32("RoleId");
-            ViewBag.UserName = userName;
-            ViewBag.RoleId = roleId;
+
 
             ViewBag.NumOfRegisteredUsers = _context.UserLogins.Count();
             ViewBag.NumOfHotels = _context.Hotels.Count();
