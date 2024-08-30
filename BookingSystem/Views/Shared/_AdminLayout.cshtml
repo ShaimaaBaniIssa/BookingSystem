@@ -71,8 +71,6 @@
                     </li>
                     @if (roleId.Equals(2))
                     {
-                        
-                    
                     <li  class="nav-item">
                         <a asp-action="Index" asp-controller="Customers"  class="nav-link" >
                             <span class="icon-bg"><i class="mdi mdi-contacts menu-icon"></i></span>
@@ -124,6 +122,26 @@
                         </a>
 
                     </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="collapse" aria-expanded="true" aria-controls="ui-basic">
+                                <span class="icon-bg">
+                                    <i class="mdi mdi-desktop-mac menu-icon"></i>
+                                </span>
+                                <span class="menu-title">Website Pages</span>
+                                <i class="menu-arrow"></i>
+                            </a>
+                            <div class="collapse show" id="ui-basic" style="">
+                                <ul class="nav flex-column sub-menu">
+                                    <li class="nav-item"> <a class="nav-link" asp-action="Index" asp-controller="Homedatums">Home Page</a></li>
+                                    <li class="nav-item"> <a class="nav-link" asp-action="Index" asp-controller="Aboutusdatums">About us page </a></li>
+                                    <li class="nav-item"> <a class="nav-link" asp-action="Index" asp-controller="Contactusdatums">Contact us page</a></li>
+
+
+                                </ul>
+                            </div>
+                        </li>
+                        
                     }
                 </ul>
             </nav>

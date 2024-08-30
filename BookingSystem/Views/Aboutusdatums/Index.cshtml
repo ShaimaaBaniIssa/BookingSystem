@@ -3,9 +3,12 @@
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
-}
+    var roleId = Context.Session.GetInt32("RoleId");
 
-<h1>Index</h1>
+} 
+@if (roleId.Equals(2))
+{
+<h1 class="text-primary">About Us page data</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -88,3 +91,10 @@
 }
     </tbody>
 </table>
+}
+else
+{
+    <h2 class="text-danger text-center">Admin Should Login</h2>
+}
+
+
