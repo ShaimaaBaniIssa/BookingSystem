@@ -25,8 +25,7 @@ namespace BookingSystem.Utility
                 "badge badge-danger" :
                 status.Equals(SD.BookingStatus_Pending) ?
                 "badge badge-warning" :
-                status.Equals(SD.BookingStatus_CheckedOut) || status.Equals(SD.BookingStatus_CheckedIn) ?
-                "badge badge-info":"";
+               "";
         }
     }
 

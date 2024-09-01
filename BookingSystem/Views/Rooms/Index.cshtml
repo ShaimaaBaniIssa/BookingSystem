@@ -62,11 +62,11 @@
                 @Html.DisplayFor(modelItem => item.Maxcapacity)
             </td>
             <td>
-                    @Html.DisplayFor(modelItem => item.BookedFrom)
+                    @item.BookedFrom?.ToString("dd MMMM yyyy")
 
             </td>
             <td>
-                    @Html.DisplayFor(modelItem => item.BookedTo)
+                    @item.BookedTo?.ToString("dd MMMM yyyy")
 
                 </td>
                 <td>

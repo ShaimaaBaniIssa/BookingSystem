@@ -98,12 +98,7 @@
                         @Html.DisplayFor(modelItem => item.Totalprice)
 
                     </td>
-                    @if (item.Status.Equals(SD.BookingStatus_Confirmed))
-                    {
-                         <td>
-                        <a class="btn btn-info" asp-controller="Bookings" asp-action="CheckOut" asp-route-bookingId="@item.Bookingid">Check Out</a>
-                    </td>
-                    }
+                   
                     @if (item.Status.Equals(SD.Testimonial_Pending))
                     {
                         <td>

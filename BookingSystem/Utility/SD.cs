@@ -20,8 +20,7 @@
         public const string BookingStatus_Confirmed = "Confirmed";
         public const string BookingStatus_Pending = "Pending"; // wait for payment
         public const string BookingStatus_Cancelled = "Cancelled"; // by the admin
-        public const string BookingStatus_CheckedIn = "CheckedIn";
-        public const string BookingStatus_CheckedOut = "CheckedOut";
+ 
 
 
 

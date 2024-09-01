@@ -156,21 +156,6 @@ namespace BookingSystem.Controllers
 
 
         }
-        // admin can change the status of the book to check out
-        public IActionResult CheckOut(decimal bookingId)
-        {
-            var booking = _context.Bookings.SingleOrDefault(u => u.Bookingid == bookingId);
-            var room = _context.Rooms.SingleOrDefault(u => u.Roomid == booking.Roomid);
-            room.BookedFrom = null;
-            room.BookedTo = null;
-
-            booking.Status = SD.BookingStatus_CheckedOut;
-            _context.Bookings.Update(booking);
-            _context.Rooms.Update(room);
-            _context.SaveChanges();
-
-            return RedirectToAction(nameof(Search));
-        }
         // admin can cancel the book
         public IActionResult CancelBook(decimal bookingId)
         {
